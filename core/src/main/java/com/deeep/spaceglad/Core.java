@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.deeep.spaceglad.screens.GameScreen;
 
 public class Core extends ApplicationAdapter {
-    public static final float VIRTUAL_WIDTH = 960;
-    public static final float VIRTUAL_HEIGHT = 540;
+    public static final float VIRTUAL_WIDTH = 1280;
+    public static final float VIRTUAL_HEIGHT = 720;
     Screen screen;
 
     @Override

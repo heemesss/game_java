@@ -48,8 +48,8 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
 
         // Move
         Vector3 tmp = new Vector3();
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) characterComponent.walkDirection.add(camera.direction);
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) characterComponent.walkDirection.sub(camera.direction);
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) characterComponent.walkDirection.add(new Vector3(camera.direction.x, 0, camera.direction.z));
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) characterComponent.walkDirection.sub(new Vector3(camera.direction.x, 0, camera.direction.z));
         if (Gdx.input.isKeyPressed(Input.Keys.A)) tmp.set(camera.direction).crs(camera.up).scl(-1);
         if (Gdx.input.isKeyPressed(Input.Keys.D)) tmp.set(camera.direction).crs(camera.up);
         characterComponent.walkDirection.add(tmp);
@@ -59,7 +59,7 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
         // Walk
         ghost.set(0, 0, 0, 0);
         Vector3 translation = new Vector3();
-        characterComponent.ghostObject.getWorldTransform(ghost);   //TODO export this
+        characterComponent.ghostObject.getWorldTransform(ghost);
         ghost.getTranslation(translation);
         modelComponent.instance.transform.set(translation.x, translation.y, translation.z, camera.direction.x, camera.direction.y, camera.direction.z, 0);
 
