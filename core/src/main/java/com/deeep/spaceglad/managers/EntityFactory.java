@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.FloatAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
+import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.model.data.ModelData;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.TextureProvider;
@@ -29,6 +30,8 @@ import com.badlogic.gdx.utils.UBJsonReader;
 import com.deeep.spaceglad.bullet.MotionState;
 import com.deeep.spaceglad.components.BulletComponent;
 import com.deeep.spaceglad.components.CharacterComponent;
+import com.deeep.spaceglad.components.EnemyComponent;
+import com.deeep.spaceglad.components.GunComponent;
 import com.deeep.spaceglad.components.ModelComponent;
 import com.deeep.spaceglad.components.PlayerComponent;
 import com.deeep.spaceglad.systems.BulletSystem;
@@ -40,6 +43,8 @@ public class EntityFactory {
     private static Model playerModel, enemyModel;
     private static Texture playerTexture;
     private static ModelBuilder modelBuilder;
+    private static ModelData enemyModelData;
+    private static ModelComponent enemyModelComponent;
 
     static {
         modelBuilder = new ModelBuilder();
@@ -84,20 +89,42 @@ public class EntityFactory {
         return entity;
     }
 
-    public static Entity loadDome(int x, int y, int z) {
-        UBJsonReader jsonReader = new UBJsonReader();
-        G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
-        Model model = modelLoader.loadModel(Gdx.files.getFileHandle("data/spacedome.g3db", Files.FileType.Internal));
-        ModelComponent modelComponent = new ModelComponent(model, x, y, z);
+    public static Entity createEnemy(BulletSystem bulletSystem, float x, float y, float z) {
         Entity entity = new Entity();
-        entity.add(modelComponent);
+        ModelLoader<?> modelLoader = new G3dModelLoader(new JsonReader());
+        if (enemyModel == null) {
+            enemyModelData = modelLoader.loadModelData(Gdx.files.internal("data/Dragon.g3dj"));
+            enemyModel = new Model(enemyModelData, new TextureProvider.FileTextureProvider());
+            for (Node node : enemyModel.nodes) node.scale.scl(1);
+            enemyModel.calculateTransforms();
+            enemyModelComponent = new ModelComponent(enemyModel, x, y, z);
+        }
+        enemyModelComponent.instance.transform.set(enemyModelComponent.matrix4.setTranslation(x, y, z));
+        entity.add(enemyModelComponent);
+        CharacterComponent characterComponent = new CharacterComponent();
+        characterComponent.ghostObject = new btPairCachingGhostObject();
+        characterComponent.ghostObject.setWorldTransform(enemyModelComponent.instance.transform);
+        characterComponent.ghostShape = new btCapsuleShape(0.4f, 0.4f);
+        characterComponent.ghostObject.setCollisionShape(characterComponent.ghostShape);
+        characterComponent.ghostObject.setCollisionFlags(btCollisionObject.CollisionFlags.CF_CHARACTER_OBJECT);
+        characterComponent.characterController = new btKinematicCharacterController(characterComponent.ghostObject, characterComponent.ghostShape, .35f);
+        characterComponent.ghostObject.userData = entity;
+        characterComponent.characterController.setGravity(new Vector3(0, -10, 0));
+
+        entity.add(characterComponent);
+        bulletSystem.collisionWorld.addCollisionObject(entity.getComponent(CharacterComponent.class).ghostObject,
+            (short) btBroadphaseProxy.CollisionFilterGroups.CharacterFilter,
+            (short) (btBroadphaseProxy.CollisionFilterGroups.AllFilter));
+        bulletSystem.collisionWorld.addAction(entity.getComponent(CharacterComponent.class).characterController);
+        entity.add(new EnemyComponent(EnemyComponent.STATE.HUNTING));
         return entity;
     }
+
 
     public static Entity loadScene(int x, int y, int z) {
         Entity entity = new Entity();
         ModelLoader<?> modelLoader = new G3dModelLoader(new JsonReader());
-        ModelData modelData = modelLoader.loadModelData(Gdx.files.internal("data/arena.g3dj"));
+        ModelData modelData = modelLoader.loadModelData(Gdx.files.internal("data/Model.g3dj"));
         Model model = new Model(modelData, new TextureProvider.FileTextureProvider());
         ModelComponent modelComponent = new ModelComponent(model, x, y, z);
         entity.add(modelComponent);
@@ -111,5 +138,28 @@ public class EntityFactory {
         ((btRigidBody) bulletComponent.body).setMotionState(bulletComponent.motionState);
         entity.add(bulletComponent);
         return entity;
+    }
+
+    public static Entity loadDome(int x, int y, int z) {
+        UBJsonReader jsonReader = new UBJsonReader();
+        G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
+        Model model = modelLoader.loadModel(Gdx.files.getFileHandle("data/spacedome.g3db", Files.FileType.Internal));
+        ModelComponent modelComponent = new ModelComponent(model, x, y, z);
+        Entity entity = new Entity();
+        entity.add(modelComponent);
+        return entity;
+    }
+
+    public static Entity loadGun(float x, float y, float z) {
+        ModelLoader<?> modelLoader = new G3dModelLoader(new JsonReader());
+        ModelData modelData = modelLoader.loadModelData(Gdx.files.internal("data/gun.g3dj"));
+        Model model = new Model(modelData, new TextureProvider.FileTextureProvider());
+        ModelComponent modelComponent = new ModelComponent(model, x, y, z);
+        modelComponent.instance.transform.rotate(0, -0.1f, 0, 90);
+        Entity gunEntity = new Entity();
+        gunEntity.add(modelComponent);
+        gunEntity.add(new GunComponent());
+//        gunEntity.add(new AnimationComponent(modelComponent.instance));
+        return gunEntity;
     }
 }

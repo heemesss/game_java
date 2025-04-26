@@ -29,6 +29,8 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     public PlayerSystem(Camera camera) {
         this.camera = camera;
         rayTestCB = new ClosestRayResultCallback(Vector3.Zero, Vector3.Z);
+//        characterComponent.characterController.setJumpSpeed(10);
+//        characterComponent.characterController.setFallSpeed(10);
     }
 
     @Override
@@ -48,10 +50,15 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
 
         // Move
         Vector3 tmp = new Vector3();
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) characterComponent.walkDirection.add(new Vector3(camera.direction.x, 0, camera.direction.z));
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) characterComponent.walkDirection.sub(new Vector3(camera.direction.x, 0, camera.direction.z));
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) tmp.set(camera.direction).crs(camera.up).scl(-1);
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) tmp.set(camera.direction).crs(camera.up);
+        if (Gdx.input.isKeyPressed(Input.Keys.W))
+            characterComponent.walkDirection.add(new Vector3(camera.direction.x, 0, camera.direction.z).setLength(camera.direction.len()));
+        if (Gdx.input.isKeyPressed(Input.Keys.S))
+            characterComponent.walkDirection.sub(new Vector3(camera.direction.x, 0, camera.direction.z).setLength(camera.direction.len()));
+        if (Gdx.input.isKeyPressed(Input.Keys.A))
+            tmp.set(camera.direction).crs(camera.up).setLength(camera.direction.len()).scl(-1);
+        if (Gdx.input.isKeyPressed(Input.Keys.D))
+            tmp.set(camera.direction).crs(camera.up).setLength(camera.direction.len());
+
         characterComponent.walkDirection.add(tmp);
         characterComponent.walkDirection.scl(10f * delta);
         characterComponent.characterController.setWalkDirection(characterComponent.walkDirection);
@@ -61,13 +68,20 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
         Vector3 translation = new Vector3();
         characterComponent.ghostObject.getWorldTransform(ghost);
         ghost.getTranslation(translation);
-        modelComponent.instance.transform.set(translation.x, translation.y, translation.z, camera.direction.x, camera.direction.y, camera.direction.z, 0);
+        modelComponent.instance.transform.set(translation.x, translation.y, translation.z, 0, 0, 0, 0);
 
         // Camera move
-        camera.position.set(translation.x, translation.y, translation.z);
+        camera.position.set(translation.x, translation.y + 3, translation.z);
         camera.update(true);
 
         dome.getComponent(ModelComponent.class).instance.transform.setToTranslation(translation.x, translation.y, translation.z);
+
+//        dome.getComponent(ModelComponent.class).instance.transform.setToTranslation(translation.x, translation.y, translation.z);
+
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && characterComponent.characterController.getLinearVelocity().y == 0) {
+//            characterComponent.characterController.setJumpSpeed(25);
+//            characterComponent.characterController.jump();
+//        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.math.Vector3;
 import com.deeep.spaceglad.Core;
+import com.deeep.spaceglad.components.GunComponent;
 import com.deeep.spaceglad.components.ModelComponent;
 
 public class RenderSystem extends EntitySystem {
@@ -23,7 +25,8 @@ public class RenderSystem extends EntitySystem {
     private ModelBatch batch;
     private Environment environment;
     private DirectionalShadowLight shadowLight;
-    public PerspectiveCamera camera;
+    public PerspectiveCamera camera, gunCamera;
+    public Entity gun;
     private Vector3 position;
 
     public RenderSystem(){
@@ -43,6 +46,9 @@ public class RenderSystem extends EntitySystem {
 
         position = new Vector3();
         position.add(50, 50, 50);
+
+        gunCamera = new PerspectiveCamera(FOV, Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT);
+        gunCamera.far = 100;
 //        System.out.println(entities.size());
     }
 
@@ -53,8 +59,8 @@ public class RenderSystem extends EntitySystem {
     }
 
     public void update(float delta) {
-        drawShadows(delta);
         drawModels();
+        drawShadows(delta);
 //        camera.rotate(camera.up, -Gdx.input.getDeltaX() * 0.5f);
 //        camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f);
 //        camera.update(true);
@@ -81,15 +87,24 @@ public class RenderSystem extends EntitySystem {
     private void drawModels() {
         batch.begin(camera);
         for (int i = 0; i < entities.size(); i++) {
-            ModelComponent mod = entities.get(i).getComponent(ModelComponent.class);
-            batch.render(mod.instance, environment);
+            if (entities.get(i).getComponent(GunComponent.class) == null) {
+                ModelComponent mod = entities.get(i).getComponent(ModelComponent.class);
+                batch.render(mod.instance, environment);
+            }
         }
+        batch.end();
+
+        Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
+        batch.begin(gunCamera);
+        batch.render(gun.getComponent(ModelComponent.class).instance);
         batch.end();
     }
 
     public void resize(int width, int height) {
         camera.viewportHeight = height;
         camera.viewportWidth = width;
+        gunCamera.viewportHeight = height;
+        gunCamera.viewportWidth = width;
     }
 
     public void dispose() {

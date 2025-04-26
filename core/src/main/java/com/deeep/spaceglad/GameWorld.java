@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.deeep.spaceglad.managers.EntityFactory;
 import com.deeep.spaceglad.systems.BulletSystem;
+import com.deeep.spaceglad.systems.EnemySystem;
 import com.deeep.spaceglad.systems.PlayerSystem;
 import com.deeep.spaceglad.systems.RenderSystem;
 
@@ -15,9 +16,10 @@ public class GameWorld {
     private static final boolean debug = false;
     private DebugDrawer debugDrawer;
     private Engine engine;
+    private Entity gun;
     public RenderSystem renderSystem;
     private PlayerSystem playerSystem;
-    private BulletSystem bulletSystem;
+    public BulletSystem bulletSystem;
 
     public GameWorld(){
         Bullet.init();
@@ -31,15 +33,21 @@ public class GameWorld {
         engine.addSystem(renderSystem = new RenderSystem());
         engine.addSystem(bulletSystem = new BulletSystem());
         engine.addSystem(playerSystem = new PlayerSystem(renderSystem.camera));
+        engine.addSystem(new EnemySystem(this));
         if (debug) bulletSystem.collisionWorld.setDebugDrawer(this.debugDrawer);
     }
 
     private void addEntities(){
-        engine.addEntity(EntityFactory.createPlayer(bulletSystem, 0, 15, 0));
         engine.addEntity(EntityFactory.loadScene(0, 0, 0));
         Entity dome = EntityFactory.loadDome(0, 0, 0);
-        engine.addEntity(EntityFactory.loadDome(0, 0, 0));
+//        engine.addEntity(EntityFactory.loadDome(0, 0, 0));
+        engine.addEntity(dome);
+        engine.addEntity(gun = EntityFactory.loadGun(2.5f, -1.9f, -4));
         playerSystem.dome = dome;
+//        playerSystem.gun = gun;
+        renderSystem.gun = gun;
+        engine.addEntity(EntityFactory.createPlayer(bulletSystem, 0, 10, 0));
+        engine.addEntity(EntityFactory.createEnemy(bulletSystem, 0, 0, 10));
     }
 
     public void render(float delta) {
