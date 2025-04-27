@@ -104,7 +104,7 @@ public class EntityFactory {
         CharacterComponent characterComponent = new CharacterComponent();
         characterComponent.ghostObject = new btPairCachingGhostObject();
         characterComponent.ghostObject.setWorldTransform(enemyModelComponent.instance.transform);
-        characterComponent.ghostShape = new btCapsuleShape(0.4f, 0.4f);
+        characterComponent.ghostShape = new btCapsuleShape(1f, 1f);
         characterComponent.ghostObject.setCollisionShape(characterComponent.ghostShape);
         characterComponent.ghostObject.setCollisionFlags(btCollisionObject.CollisionFlags.CF_CHARACTER_OBJECT);
         characterComponent.characterController = new btKinematicCharacterController(characterComponent.ghostObject, characterComponent.ghostShape, .35f);

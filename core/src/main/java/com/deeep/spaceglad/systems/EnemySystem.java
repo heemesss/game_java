@@ -80,6 +80,7 @@ public class EnemySystem extends EntitySystem implements EntityListener {
             ghost.getTranslation(translation);
 
             mod.instance.transform.set(translation.x, translation.y, translation.z, rot.x, rot.y, rot.z, rot.w);
+//            mod.instance.transform.set(translation.x, translation.y, translation.z, rot.x, 0, 0, 0);
         }
     }
 

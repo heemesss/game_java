@@ -16,8 +16,10 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.math.Vector3;
 import com.deeep.spaceglad.Core;
+import com.deeep.spaceglad.components.EnemyComponent;
 import com.deeep.spaceglad.components.GunComponent;
 import com.deeep.spaceglad.components.ModelComponent;
+import com.deeep.spaceglad.components.PlayerComponent;
 
 public class RenderSystem extends EntitySystem {
     private static final float FOV = 67F;
@@ -31,21 +33,19 @@ public class RenderSystem extends EntitySystem {
 
     public RenderSystem(){
         camera = new PerspectiveCamera(FOV, Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT);
-        camera.far = 1000;
-        camera.position.add(10, 10, 0);
+        camera.far = 10000;
 //        camera.lookAt(0, 0, 0);
 
         environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.5f, 0.5f, 0.5f, 1f));
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 0.8f));
         shadowLight = new DirectionalShadowLight(1024 * 5, 1024 * 5, 200f, 200f, 1f, 300f);
-        shadowLight.set(0.8f, 0.8f, 0.8f, 0, -0.1f, 0.1f);
+        shadowLight.set(1f, 1f, 1f, 0, -0.1f, 0.1f);
         environment.add(shadowLight);
         environment.shadowMap = shadowLight;
 
         batch = new ModelBatch();
 
         position = new Vector3();
-        position.add(50, 50, 50);
 
         gunCamera = new PerspectiveCamera(FOV, Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT);
         gunCamera.far = 100;
@@ -59,8 +59,8 @@ public class RenderSystem extends EntitySystem {
     }
 
     public void update(float delta) {
-        drawModels();
         drawShadows(delta);
+        drawModels();
 //        camera.rotate(camera.up, -Gdx.input.getDeltaX() * 0.5f);
 //        camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f);
 //        camera.update(true);
@@ -77,8 +77,10 @@ public class RenderSystem extends EntitySystem {
         shadowLight.begin(Vector3.Zero, camera.direction);
         batch.begin(shadowLight.getCamera());
         for (int x = 0; x < entities.size(); x++) {
-            ModelComponent mod = entities.get(x).getComponent(ModelComponent.class);
-            if (isVisible(camera, mod.instance)) batch.render(mod.instance);
+            if (entities.get(x).getComponent(PlayerComponent.class) != null || entities.get(x).getComponent(EnemyComponent.class) != null) {
+                ModelComponent mod = entities.get(x).getComponent(ModelComponent.class);
+                if (isVisible(camera, mod.instance)) batch.render(mod.instance);
+            }
         }
         batch.end();
         shadowLight.end();

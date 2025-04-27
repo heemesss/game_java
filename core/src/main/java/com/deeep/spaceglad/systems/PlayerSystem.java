@@ -11,8 +11,13 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.bullet.collision.ClosestRayResultCallback;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
+import com.deeep.spaceglad.GameWorld;
+import com.deeep.spaceglad.UI.GameUI;
 import com.deeep.spaceglad.components.CharacterComponent;
+import com.deeep.spaceglad.components.EnemyComponent;
 import com.deeep.spaceglad.components.ModelComponent;
 import com.deeep.spaceglad.components.PlayerComponent;
 
@@ -22,12 +27,18 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     private Camera camera;
     ClosestRayResultCallback rayTestCB;
     private PlayerComponent playerComponent;
+    private GameUI gameUI;
     private CharacterComponent characterComponent;
     private ModelComponent modelComponent;
     private Matrix4 ghost = new Matrix4();
+    Vector3 rayFrom = new Vector3();
+    Vector3 rayTo = new Vector3();
+    private GameWorld gameWorld;
 
-    public PlayerSystem(Camera camera) {
+    public PlayerSystem(Camera camera, GameUI gameUI, GameWorld gameWorld) {
         this.camera = camera;
+        this.gameUI = gameUI;
+        this.gameWorld = gameWorld;
         rayTestCB = new ClosestRayResultCallback(Vector3.Zero, Vector3.Z);
 //        characterComponent.characterController.setJumpSpeed(10);
 //        characterComponent.characterController.setFallSpeed(10);
@@ -76,12 +87,36 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
 
         dome.getComponent(ModelComponent.class).instance.transform.setToTranslation(translation.x, translation.y, translation.z);
 
-//        dome.getComponent(ModelComponent.class).instance.transform.setToTranslation(translation.x, translation.y, translation.z);
+        dome.getComponent(ModelComponent.class).instance.transform.setToTranslation(translation.x, translation.y, translation.z);
 
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && characterComponent.characterController.getLinearVelocity().y == 0) {
-//            characterComponent.characterController.setJumpSpeed(25);
-//            characterComponent.characterController.jump();
-//        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && characterComponent.characterController.getLinearVelocity().y == 0) {
+            characterComponent.characterController.setJumpSpeed(25);
+            characterComponent.characterController.jump();
+        }
+
+        if (Gdx.input.justTouched()) fire();
+    }
+
+    private void fire() {
+        Ray ray = camera.getPickRay(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        rayFrom.set(ray.origin);
+        rayTo.set(ray.direction).scl(150).add(rayFrom);
+        rayTestCB.setCollisionObject(null);
+        rayTestCB.setClosestHitFraction(1f);
+        rayTestCB.setRayFromWorld(rayFrom);
+        rayTestCB.setRayToWorld(rayTo);
+        gameWorld.bulletSystem.collisionWorld.rayTest(rayFrom, rayTo, rayTestCB);
+        if (rayTestCB.hasHit()) {
+            final btCollisionObject obj = rayTestCB.getCollisionObject();
+            if (((Entity) obj.userData).getComponent(EnemyComponent.class) != null) {
+//                if(((Entity) obj.userData).getComponent(StatusComponent.class).alive) {
+//                    ((Entity) obj.userData).getComponent(StatusComponent.class).setAlive(false);
+//                    PlayerComponent.score += 100;
+//                }
+                System.out.println("Попал нафиг");
+            }
+        }
+//        gun.getComponent(AnimationComponent.class).animate("Armature|shoot", 1, 3);
     }
 
     @Override
