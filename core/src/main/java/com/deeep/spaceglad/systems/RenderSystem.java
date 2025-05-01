@@ -33,7 +33,7 @@ public class RenderSystem extends EntitySystem {
 
     public RenderSystem(){
         camera = new PerspectiveCamera(FOV, Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT);
-        camera.far = 10000;
+        camera.far = 100000;
 //        camera.lookAt(0, 0, 0);
 
         environment = new Environment();

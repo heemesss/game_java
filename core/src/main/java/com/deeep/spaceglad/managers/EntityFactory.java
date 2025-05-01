@@ -34,6 +34,7 @@ import com.deeep.spaceglad.components.EnemyComponent;
 import com.deeep.spaceglad.components.GunComponent;
 import com.deeep.spaceglad.components.ModelComponent;
 import com.deeep.spaceglad.components.PlayerComponent;
+import com.deeep.spaceglad.components.StatusComponent;
 import com.deeep.spaceglad.systems.BulletSystem;
 
 /**
@@ -117,6 +118,7 @@ public class EntityFactory {
             (short) (btBroadphaseProxy.CollisionFilterGroups.AllFilter));
         bulletSystem.collisionWorld.addAction(entity.getComponent(CharacterComponent.class).characterController);
         entity.add(new EnemyComponent(EnemyComponent.STATE.HUNTING));
+        entity.add(new StatusComponent());
         return entity;
     }
 
@@ -143,7 +145,7 @@ public class EntityFactory {
     public static Entity loadDome(int x, int y, int z) {
         UBJsonReader jsonReader = new UBJsonReader();
         G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
-        Model model = modelLoader.loadModel(Gdx.files.getFileHandle("data/spacedome.g3db", Files.FileType.Internal));
+        Model model = modelLoader.loadModel(Gdx.files.getFileHandle("data/skydome.g3db", Files.FileType.Internal));
         ModelComponent modelComponent = new ModelComponent(model, x, y, z);
         Entity entity = new Entity();
         entity.add(modelComponent);

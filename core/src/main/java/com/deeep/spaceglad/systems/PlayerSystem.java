@@ -15,11 +15,13 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.bullet.collision.ClosestRayResultCallback;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.deeep.spaceglad.GameWorld;
+import com.deeep.spaceglad.Settings;
 import com.deeep.spaceglad.UI.GameUI;
 import com.deeep.spaceglad.components.CharacterComponent;
 import com.deeep.spaceglad.components.EnemyComponent;
 import com.deeep.spaceglad.components.ModelComponent;
 import com.deeep.spaceglad.components.PlayerComponent;
+import com.deeep.spaceglad.components.StatusComponent;
 
 public class PlayerSystem extends EntitySystem implements EntityListener, InputProcessor {
     private Entity player;
@@ -48,6 +50,8 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     public void update(float deltaTime) {
         if (player == null) return;
         updateMovement(deltaTime);
+        updateStatus();
+        checkGameOver();
     }
 
     private void updateMovement(float delta) {
@@ -87,20 +91,30 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
 
         dome.getComponent(ModelComponent.class).instance.transform.setToTranslation(translation.x, translation.y, translation.z);
 
-        dome.getComponent(ModelComponent.class).instance.transform.setToTranslation(translation.x, translation.y, translation.z);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && characterComponent.characterController.getLinearVelocity().y == 0) {
-            characterComponent.characterController.setJumpSpeed(25);
-            characterComponent.characterController.jump();
-        }
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && characterComponent.characterController.getLinearVelocity().y == 0) {
+//            characterComponent.characterController.setJumpSpeed(25);
+//            characterComponent.characterController.jump();
+//        }
 
         if (Gdx.input.justTouched()) fire();
+    }
+
+    private void updateStatus() {
+        gameUI.healthWidget.setValue(playerComponent.health);
+    }
+
+    private void checkGameOver() {
+        if (playerComponent.health <= 0 && !Settings.Paused) {
+            Settings.Paused = true;
+            gameUI.gameOverWidget.gameOver();
+        }
     }
 
     private void fire() {
         Ray ray = camera.getPickRay(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         rayFrom.set(ray.origin);
-        rayTo.set(ray.direction).scl(150).add(rayFrom);
+        rayTo.set(ray.direction).scl(50f).add(rayFrom);
         rayTestCB.setCollisionObject(null);
         rayTestCB.setClosestHitFraction(1f);
         rayTestCB.setRayFromWorld(rayFrom);
@@ -109,11 +123,10 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
         if (rayTestCB.hasHit()) {
             final btCollisionObject obj = rayTestCB.getCollisionObject();
             if (((Entity) obj.userData).getComponent(EnemyComponent.class) != null) {
-//                if(((Entity) obj.userData).getComponent(StatusComponent.class).alive) {
-//                    ((Entity) obj.userData).getComponent(StatusComponent.class).setAlive(false);
-//                    PlayerComponent.score += 100;
-//                }
-                System.out.println("Попал нафиг");
+                if(((Entity) obj.userData).getComponent(StatusComponent.class).alive) {
+                    ((Entity) obj.userData).getComponent(StatusComponent.class).setAlive(false);
+                    PlayerComponent.score += 100;
+                }
             }
         }
 //        gun.getComponent(AnimationComponent.class).animate("Armature|shoot", 1, 3);

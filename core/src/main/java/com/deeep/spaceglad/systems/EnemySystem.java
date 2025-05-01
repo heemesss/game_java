@@ -1,20 +1,12 @@
 package com.deeep.spaceglad.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntityListener;
-import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.deeep.spaceglad.GameWorld;
-import com.deeep.spaceglad.components.CharacterComponent;
-import com.deeep.spaceglad.components.EnemyComponent;
-import com.deeep.spaceglad.components.ModelComponent;
-import com.deeep.spaceglad.components.PlayerComponent;
+import com.deeep.spaceglad.components.*;
 import com.deeep.spaceglad.managers.EntityFactory;
 
 import java.util.Random;
@@ -30,32 +22,32 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     private Vector3 enemyPosition = new Vector3();
     private Matrix4 ghost = new Matrix4();
     private Vector3 translation = new Vector3();
-    private Random random = new Random();
-
-    private float[] xSpawns = {12, -12, 112, -112};
-    private float[] zSpawns = {-112, 112, -12, 12};
 
     ComponentMapper<CharacterComponent> cm = ComponentMapper.getFor(CharacterComponent.class);
+    ComponentMapper<StatusComponent> sm = ComponentMapper.getFor(StatusComponent.class);
 
-    public EnemySystem(GameWorld gameWorld) {
+    public EnemySystem(GameWorld gameWorld, Entity entity) {
         this.gameWorld = gameWorld;
+        player = entity;
     }
 
     @Override
     public void addedToEngine(Engine e) {
-        entities = e.getEntitiesFor(Family.all(EnemyComponent.class, CharacterComponent.class).get());
-        e.addEntityListener(Family.one(PlayerComponent.class).get(), this);
+        entities = e.getEntitiesFor(Family.all(EnemyComponent.class, CharacterComponent.class, StatusComponent.class).get());
+//        e.addEntityListener(Family.one(PlayerComponent.class).get(), this);
         this.engine = e;
     }
 
     public void update(float delta) {
-        if (entities.size() < 1) spawnEnemy(getRandomSpawnIndex());
+        if (entities.size() < 1) {
+            spawnEnemy();
+        }
 
         for (int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
             ModelComponent mod = e.getComponent(ModelComponent.class);
             ModelComponent playerModel = player.getComponent(ModelComponent.class);
-//            if (!sm.get(e).alive) return;
+            if (!sm.get(e).alive) return;
             playerModel.instance.transform.getTranslation(playerPosition);
             mod.instance.transform.getTranslation(enemyPosition);
 
@@ -80,24 +72,18 @@ public class EnemySystem extends EntitySystem implements EntityListener {
             ghost.getTranslation(translation);
 
             mod.instance.transform.set(translation.x, translation.y, translation.z, rot.x, rot.y, rot.z, rot.w);
-//            mod.instance.transform.set(translation.x, translation.y, translation.z, rot.x, 0, 0, 0);
         }
     }
 
-    private void spawnEnemy(int randomSpawnIndex) {
-        engine.addEntity(EntityFactory.createEnemy(gameWorld.bulletSystem, xSpawns[randomSpawnIndex], 33, zSpawns[randomSpawnIndex]));
+    private void spawnEnemy() {
+        engine.addEntity(EntityFactory.createEnemy(gameWorld.bulletSystem, 0, 0, 0));
     }
 
     @Override
     public void entityAdded(Entity entity) {
-        player = entity;
     }
 
     @Override
     public void entityRemoved(Entity entity) {
-    }
-
-    public int getRandomSpawnIndex() {
-        return random.nextInt(xSpawns.length);
     }
 }

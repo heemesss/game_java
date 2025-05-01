@@ -6,10 +6,12 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.bullet.collision.ContactListener;
 import com.badlogic.gdx.physics.bullet.collision.btAxisSweep3;
 import com.badlogic.gdx.physics.bullet.collision.btBroadphaseInterface;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionConfiguration;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionDispatcher;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.physics.bullet.collision.btDefaultCollisionConfiguration;
 import com.badlogic.gdx.physics.bullet.collision.btGhostPairCallback;
 import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver;
@@ -18,6 +20,9 @@ import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.deeep.spaceglad.components.BulletComponent;
 import com.deeep.spaceglad.components.CharacterComponent;
+import com.deeep.spaceglad.components.EnemyComponent;
+import com.deeep.spaceglad.components.PlayerComponent;
+import com.deeep.spaceglad.components.StatusComponent;
 
 public class BulletSystem extends EntitySystem implements EntityListener {
     private final btCollisionConfiguration collisionConfiguration;
@@ -27,7 +32,30 @@ public class BulletSystem extends EntitySystem implements EntityListener {
     public final btDiscreteDynamicsWorld collisionWorld;
     private btGhostPairCallback ghostPairCallback;
 
+    public class MyContactListener extends ContactListener {
+        @Override
+        public void onContactStarted(btCollisionObject colObj0, btCollisionObject colObj1) {
+            if (colObj0.userData instanceof Entity && colObj0.userData instanceof Entity) {
+                Entity entity0 = (Entity) colObj0.userData;
+                Entity entity1 = (Entity) colObj1.userData;
+                if (entity0.getComponent(CharacterComponent.class) != null && entity1.getComponent(CharacterComponent.class) != null) {
+                    if (entity0.getComponent(EnemyComponent.class) != null) {
+                        if (entity0.getComponent(StatusComponent.class).alive)
+                            entity1.getComponent(PlayerComponent.class).health -= 100;
+                        entity0.getComponent(StatusComponent.class).alive = false;
+                    } else {
+                        if (entity1.getComponent(StatusComponent.class).alive)
+                            entity0.getComponent(PlayerComponent.class).health -= 100;
+                        entity1.getComponent(StatusComponent.class).alive = false;
+                    }
+                }
+            }
+        }
+    }
+
     public BulletSystem(){
+        MyContactListener myContactListener = new MyContactListener();
+        myContactListener.enable();
         collisionConfiguration = new btDefaultCollisionConfiguration();
         dispatcher = new btCollisionDispatcher(collisionConfiguration);
         broadphase = new btAxisSweep3(new Vector3(-1000, -1000, -1000), new Vector3(1000, 1000, 1000));
