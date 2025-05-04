@@ -1,5 +1,6 @@
 package com.deeep.spaceglad.UI;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -18,7 +19,7 @@ import com.deeep.spaceglad.screens.MainMenuScreen;
 public class PauseWidget extends Actor {
     private Core game;
     private Window window;
-    private TextButton closeDialog, restartButton, quitButton;
+    private TextButton closeDialog, restartButton, quitButton, pauseButton;
     private Stage stage;
 
     public PauseWidget(Core game, Stage stage) {
@@ -34,12 +35,17 @@ public class PauseWidget extends Actor {
         closeDialog = new TextButton("X", Assets.skin);
         restartButton = new TextButton("Restart", Assets.skin);
         quitButton = new TextButton("Quit", Assets.skin);
+
+        if (Gdx.app.getType() == Application.ApplicationType.Android)
+            pauseButton = new TextButton("Pause", Assets.skin);
     }
 
     private void configureWidgets() {
         window.getTitleTable().add(closeDialog).height(window.getPadTop());
         window.add(restartButton);
         window.add(quitButton);
+        if (Gdx.app.getType() == Application.ApplicationType.Android)
+            stage.addActor(pauseButton);
     }
 
     private void setListeners() {
@@ -71,6 +77,13 @@ public class PauseWidget extends Actor {
                 game.setScreen(new MainMenuScreen(game));
             }
         });
+        if (Gdx.app.getType() == Application.ApplicationType.Android)
+            pauseButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent inputEvent, float x, float y) {
+                    handleUpdates();
+                }
+            });
     }
 
     private void handleUpdates() {
@@ -78,10 +91,14 @@ public class PauseWidget extends Actor {
             stage.addActor(window);
             Gdx.input.setCursorCatched(false);
             Settings.Paused = true;
+            if (Gdx.app.getType() == Application.ApplicationType.Android)
+                pauseButton.setVisible(false);
         } else {
             window.remove();
             Gdx.input.setCursorCatched(true);
             Settings.Paused = false;
+            if (Gdx.app.getType() == Application.ApplicationType.Android)
+                pauseButton.setVisible(true);
         }
     }
 
@@ -89,11 +106,13 @@ public class PauseWidget extends Actor {
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
         window.setPosition(Core.VIRTUAL_WIDTH / 2 - window.getWidth() / 2, Core.VIRTUAL_HEIGHT / 2 - window.getHeight() / 2);
+        if (Gdx.app.getType() == Application.ApplicationType.Android)
+            pauseButton.setPosition(Gdx.graphics.getWidth() - pauseButton.getWidth(), Gdx.graphics.getHeight() - pauseButton.getHeight());
     }
 
     @Override
     public void setSize(float width, float height) {
         super.setSize(width, height);
-        window.setSize(width * 2, height * 2);
+        window.setSize(restartButton.getWidth() + quitButton.getWidth(), height * 4);
     }
 }

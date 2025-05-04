@@ -43,7 +43,6 @@ public class MainMenuScreen implements Screen {
         playButton.setPosition(Core.VIRTUAL_WIDTH / 2 - playButton.getWidth() / 2, Core.VIRTUAL_HEIGHT / 2 - 100);
         quitButton.setSize(128, 64);
         quitButton.setPosition(Core.VIRTUAL_WIDTH / 2 - playButton.getWidth() / 2, Core.VIRTUAL_HEIGHT / 2 - 170);
-
         stage.addActor(backgroundImage);
         stage.addActor(titleImage);
         stage.addActor(playButton);

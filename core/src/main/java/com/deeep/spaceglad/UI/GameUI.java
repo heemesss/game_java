@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.deeep.spaceglad.Assets;
 import com.deeep.spaceglad.Core;
-//import com.deeep.spaceglad.managers.ControllerWidget;
+import com.deeep.spaceglad.screens.ControllerWidget;
 
 public class GameUI {
     private Core game;
@@ -18,7 +18,7 @@ public class GameUI {
     private CrosshairWidget crosshairWidget;
     public GameOverWidget gameOverWidget;
     private Label fpsLabel;
-//    private ControllerWidget controllerWidget;
+    private ControllerWidget controllerWidget;
 
     public GameUI(Core game) {
         this.game = game;
@@ -34,7 +34,7 @@ public class GameUI {
         gameOverWidget = new GameOverWidget(game, stage);
         crosshairWidget = new CrosshairWidget();
         fpsLabel = new Label("", Assets.skin);
-//        if (Gdx.app.getType() == Application.ApplicationType.Android) controllerWidget = new ControllerWidget();
+        if (Gdx.app.getType() == Application.ApplicationType.Android) controllerWidget = new ControllerWidget();
     }
 
     public void configureWidgets() {
@@ -56,7 +56,7 @@ public class GameUI {
         stage.addActor(crosshairWidget);
         stage.setKeyboardFocus(pauseWidget);
         stage.addActor(fpsLabel);
-//        if (Gdx.app.getType() == Application.ApplicationType.Android) controllerWidget.addToStage(stage);
+        if (Gdx.app.getType() == Application.ApplicationType.Android) controllerWidget.addToStage(stage);
     }
 
     public void update(float delta) {

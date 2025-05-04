@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.bullet.collision.ClosestRayResultCallback;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
+import com.deeep.spaceglad.Core;
 import com.deeep.spaceglad.GameWorld;
 import com.deeep.spaceglad.Settings;
 import com.deeep.spaceglad.UI.GameUI;
@@ -22,6 +24,7 @@ import com.deeep.spaceglad.components.EnemyComponent;
 import com.deeep.spaceglad.components.ModelComponent;
 import com.deeep.spaceglad.components.PlayerComponent;
 import com.deeep.spaceglad.components.StatusComponent;
+import com.deeep.spaceglad.screens.ControllerWidget;
 
 public class PlayerSystem extends EntitySystem implements EntityListener, InputProcessor {
     private Entity player;
@@ -55,9 +58,19 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     }
 
     private void updateMovement(float delta) {
-        // Camera
-        camera.rotate(camera.up, -Gdx.input.getDeltaX() * 0.5f);
-        camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f);
+        if (Gdx.app.getType() == Application.ApplicationType.Android) {
+            for (int i = 0; Gdx.input.isTouched(i); i++){
+                if (Gdx.input.getX(i) > Gdx.graphics.getWidth() / 2) {
+                    System.out.println(Gdx.input.getX(i));
+                    camera.rotate(camera.up, -Gdx.input.getDeltaX(i) * 0.25f);
+                    camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY(i) * 0.25f);
+                    break;
+                }
+            }
+        } else {
+            camera.rotate(camera.up, -Gdx.input.getDeltaX() * 0.5f);
+            camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f);
+        }
 
         // Zero
         characterComponent.characterDirection.set(-1, 0, 0).rot(modelComponent.instance.transform).nor();
@@ -65,15 +78,23 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
 
         // Move
         Vector3 tmp = new Vector3();
-        if (Gdx.input.isKeyPressed(Input.Keys.W))
-            characterComponent.walkDirection.add(new Vector3(camera.direction.x, 0, camera.direction.z).setLength(camera.direction.len()));
-        if (Gdx.input.isKeyPressed(Input.Keys.S))
-            characterComponent.walkDirection.sub(new Vector3(camera.direction.x, 0, camera.direction.z).setLength(camera.direction.len()));
-        if (Gdx.input.isKeyPressed(Input.Keys.A))
-            tmp.set(camera.direction).crs(camera.up).setLength(camera.direction.len()).scl(-1);
-        if (Gdx.input.isKeyPressed(Input.Keys.D))
-            tmp.set(camera.direction).crs(camera.up).setLength(camera.direction.len());
+        {
+            Vector3 walk = camera.direction.cpy();
+            walk.y = 0;
+            walk.setLength(camera.direction.len());
+        if (Gdx.app.getType() == Application.ApplicationType.Android) {
+            if (ControllerWidget.getMovementVector().y > 0) characterComponent.walkDirection.add(walk);
+            if (ControllerWidget.getMovementVector().y < 0) characterComponent.walkDirection.sub(walk);
+            if (ControllerWidget.getMovementVector().x < 0) tmp.set(walk).crs(camera.up).scl(-1);
+            if (ControllerWidget.getMovementVector().x > 0) tmp.set(walk).crs(camera.up);
+        } else {
 
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) characterComponent.walkDirection.add(walk);
+            if (Gdx.input.isKeyPressed(Input.Keys.S)) characterComponent.walkDirection.sub(walk);
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) tmp.set(walk).crs(camera.up).scl(-1);
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) tmp.set(walk).crs(camera.up);
+        }
+        }
         characterComponent.walkDirection.add(tmp);
         characterComponent.walkDirection.scl(10f * delta);
         characterComponent.characterController.setWalkDirection(characterComponent.walkDirection);
