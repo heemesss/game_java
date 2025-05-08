@@ -20,7 +20,7 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(Core game) {
         this.game = game;
-        stage = new Stage(new FitViewport(Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT));
+        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         setWidgets();
         configureWidgers();
         setListeners();
@@ -36,13 +36,13 @@ public class MainMenuScreen implements Screen {
     }
 
     private void configureWidgers() {
-        backgroundImage.setSize(Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT);
-        titleImage.setSize(620, 200);
-        titleImage.setPosition(Core.VIRTUAL_WIDTH / 2 - titleImage.getWidth() / 2, Core.VIRTUAL_HEIGHT / 2);
-        playButton.setSize(128, 64);
-        playButton.setPosition(Core.VIRTUAL_WIDTH / 2 - playButton.getWidth() / 2, Core.VIRTUAL_HEIGHT / 2 - 100);
-        quitButton.setSize(128, 64);
-        quitButton.setPosition(Core.VIRTUAL_WIDTH / 2 - playButton.getWidth() / 2, Core.VIRTUAL_HEIGHT / 2 - 170);
+        backgroundImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        titleImage.setSize(Gdx.graphics.getWidth() / 3f, 200);
+        titleImage.setPosition(Gdx.graphics.getWidth() / 6f * 2 - titleImage.getWidth() / 2, Gdx.graphics.getHeight() / 2f - titleImage.getHeight() / 2);
+        playButton.setSize(256, 128);
+        playButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + playButton.getHeight() * 0.5f);
+        quitButton.setSize(256, 128);
+        quitButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - quitButton.getHeight() * 1.5f);
         stage.addActor(backgroundImage);
         stage.addActor(titleImage);
         stage.addActor(playButton);

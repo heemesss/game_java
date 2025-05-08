@@ -105,7 +105,7 @@ public class PauseWidget extends Actor {
     @Override
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
-        window.setPosition(Core.VIRTUAL_WIDTH / 2 - window.getWidth() / 2, Core.VIRTUAL_HEIGHT / 2 - window.getHeight() / 2);
+        window.setPosition(Gdx.graphics.getWidth() / 2f - window.getWidth() / 2, Gdx.graphics.getHeight() / 2f - window.getHeight() / 2);
         if (Gdx.app.getType() == Application.ApplicationType.Android)
             pauseButton.setPosition(Gdx.graphics.getWidth() - pauseButton.getWidth(), Gdx.graphics.getHeight() - pauseButton.getHeight());
     }
@@ -113,6 +113,10 @@ public class PauseWidget extends Actor {
     @Override
     public void setSize(float width, float height) {
         super.setSize(width, height);
+        restartButton.setWidth(restartButton.getWidth() * 2);
+        quitButton.setWidth(quitButton.getWidth() * 2);
         window.setSize(restartButton.getWidth() + quitButton.getWidth(), height * 4);
+        if (Gdx.app.getType() == Application.ApplicationType.Android)
+            pauseButton.setSize(pauseButton.getWidth(), pauseButton.getHeight() * 2);
     }
 }

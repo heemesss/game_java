@@ -22,7 +22,7 @@ public class GameUI {
 
     public GameUI(Core game) {
         this.game = game;
-        stage = new Stage(new FitViewport(Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT));
+        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         setWidgets();
         configureWidgets();
     }
@@ -39,17 +39,17 @@ public class GameUI {
 
     public void configureWidgets() {
         healthWidget.setSize(140, 25);
-        healthWidget.setPosition(Core.VIRTUAL_WIDTH / 2 - healthWidget.getWidth() / 2, 0);
+        healthWidget.setPosition(Gdx.graphics.getWidth() / 2f - healthWidget.getWidth() / 2, 0);
         scoreWidget.setSize(140, 25);
-        scoreWidget.setPosition(0, Core.VIRTUAL_HEIGHT - scoreWidget.getHeight());
+        scoreWidget.setPosition(0, Gdx.graphics.getHeight() - scoreWidget.getHeight());
         pauseWidget.setSize(64, 64);
-        pauseWidget.setPosition(Core.VIRTUAL_WIDTH - pauseWidget.getWidth(), Core.VIRTUAL_HEIGHT - pauseWidget.getHeight());
+        pauseWidget.setPosition(Gdx.graphics.getWidth() - pauseWidget.getWidth(), Gdx.graphics.getHeight() - pauseWidget.getHeight());
         gameOverWidget.setSize(280, 100);
-        gameOverWidget.setPosition(Core.VIRTUAL_WIDTH / 2 - 140, Core.VIRTUAL_HEIGHT / 2);
-        crosshairWidget.setPosition(Core.VIRTUAL_WIDTH / 2 - 16, Core.VIRTUAL_HEIGHT / 2 - 16);
+        gameOverWidget.setPosition(Gdx.graphics.getWidth() / 2f - 140, Gdx.graphics.getHeight() / 2f);
+        crosshairWidget.setPosition(Gdx.graphics.getWidth() / 2f - 16, Gdx.graphics.getHeight() / 2f - 16);
         crosshairWidget.setSize(32, 32);
 
-        fpsLabel.setPosition(0, 10);
+        fpsLabel.setPosition(0, 32);
 
         stage.addActor(healthWidget);
         stage.addActor(scoreWidget);

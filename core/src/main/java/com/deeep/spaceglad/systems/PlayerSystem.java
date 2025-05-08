@@ -10,7 +10,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.bullet.collision.ClosestRayResultCallback;
@@ -78,24 +80,23 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
 
         // Move
         Vector3 tmp = new Vector3();
-        {
-            Vector3 walk = camera.direction.cpy();
-            walk.y = 0;
-            walk.setLength(camera.direction.len());
+        Vector3 walk = camera.direction.cpy();
+        walk.y = 0;
+        walk.setLength(camera.direction.len());
         if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            if (ControllerWidget.getMovementVector().y > 0) characterComponent.walkDirection.add(walk);
-            if (ControllerWidget.getMovementVector().y < 0) characterComponent.walkDirection.sub(walk);
-            if (ControllerWidget.getMovementVector().x < 0) tmp.set(walk).crs(camera.up).scl(-1);
-            if (ControllerWidget.getMovementVector().x > 0) tmp.set(walk).crs(camera.up);
+            tmp.set(walk).scl(ControllerWidget.getMovementVector().y);
+            characterComponent.walkDirection.add(tmp);
+
+            tmp.set(walk).crs(camera.up).scl(ControllerWidget.getMovementVector().x);
+            characterComponent.walkDirection.add(tmp);
         } else {
 
             if (Gdx.input.isKeyPressed(Input.Keys.W)) characterComponent.walkDirection.add(walk);
             if (Gdx.input.isKeyPressed(Input.Keys.S)) characterComponent.walkDirection.sub(walk);
             if (Gdx.input.isKeyPressed(Input.Keys.A)) tmp.set(walk).crs(camera.up).scl(-1);
             if (Gdx.input.isKeyPressed(Input.Keys.D)) tmp.set(walk).crs(camera.up);
+            characterComponent.walkDirection.add(tmp);
         }
-        }
-        characterComponent.walkDirection.add(tmp);
         characterComponent.walkDirection.scl(10f * delta);
         characterComponent.characterController.setWalkDirection(characterComponent.walkDirection);
 
@@ -118,7 +119,8 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
 //            characterComponent.characterController.jump();
 //        }
 
-        if (Gdx.input.justTouched()) fire();
+        if (Gdx.input.justTouched())
+            fire();
     }
 
     private void updateStatus() {
@@ -135,7 +137,7 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     private void fire() {
         Ray ray = camera.getPickRay(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         rayFrom.set(ray.origin);
-        rayTo.set(ray.direction).scl(50f).add(rayFrom);
+        rayTo.set(ray.direction).scl(150f).add(rayFrom);
         rayTestCB.setCollisionObject(null);
         rayTestCB.setClosestHitFraction(1f);
         rayTestCB.setRayFromWorld(rayFrom);

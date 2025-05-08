@@ -98,8 +98,8 @@ public class EntityFactory {
             enemyModel = new Model(enemyModelData, new TextureProvider.FileTextureProvider());
             for (Node node : enemyModel.nodes) node.scale.scl(1);
             enemyModel.calculateTransforms();
-            enemyModelComponent = new ModelComponent(enemyModel, x, y, z);
         }
+        enemyModelComponent = new ModelComponent(enemyModel, x, y, z);
         enemyModelComponent.instance.transform.set(enemyModelComponent.matrix4.setTranslation(x, y, z));
         entity.add(enemyModelComponent);
         CharacterComponent characterComponent = new CharacterComponent();

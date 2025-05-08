@@ -32,7 +32,7 @@ public class RenderSystem extends EntitySystem {
     private Vector3 position;
 
     public RenderSystem(){
-        camera = new PerspectiveCamera(FOV, Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT);
+        camera = new PerspectiveCamera(FOV, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.far = 100000;
 //        camera.lookAt(0, 0, 0);
 
@@ -47,7 +47,7 @@ public class RenderSystem extends EntitySystem {
 
         position = new Vector3();
 
-        gunCamera = new PerspectiveCamera(FOV, Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT);
+        gunCamera = new PerspectiveCamera(FOV, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         gunCamera.far = 100;
 //        System.out.println(entities.size());
     }

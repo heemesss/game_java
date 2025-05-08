@@ -2,7 +2,7 @@
   "com.badlogic.gdx.graphics.g2d.BitmapFont": {
     "default-font": {
       "file": "font.fnt",
-      "scaledSize": 16
+      "scaledSize": 32
     }
   },
   "com.badlogic.gdx.graphics.Color": {

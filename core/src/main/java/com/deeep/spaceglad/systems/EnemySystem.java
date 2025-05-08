@@ -34,12 +34,12 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     @Override
     public void addedToEngine(Engine e) {
         entities = e.getEntitiesFor(Family.all(EnemyComponent.class, CharacterComponent.class, StatusComponent.class).get());
-//        e.addEntityListener(Family.one(PlayerComponent.class).get(), this);
+        e.addEntityListener(Family.one(PlayerComponent.class).get(), this);
         this.engine = e;
     }
 
     public void update(float delta) {
-        if (entities.size() < 1) {
+        if (entities.size() < 3) {
             spawnEnemy();
         }
 
