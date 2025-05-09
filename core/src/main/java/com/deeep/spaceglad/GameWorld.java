@@ -15,7 +15,7 @@ import com.deeep.spaceglad.systems.RenderSystem;
 import com.deeep.spaceglad.systems.StatusSystem;
 
 public class GameWorld {
-    private static final boolean debug = true;
+    private static final boolean debug = false;
     private DebugDrawer debugDrawer;
     private Engine engine;
     private Entity character, gun;
@@ -50,7 +50,7 @@ public class GameWorld {
         renderSystem.gun = gun;
         character = EntityFactory.createPlayer(bulletSystem, 10, 0, 0);
         engine.addEntity(character);
-        engine.addEntity(EntityFactory.createEnemy(bulletSystem, 0, 10, 10));
+        engine.addEntity(EntityFactory.createEnemy(bulletSystem, 0, 10, 0));
 
         // need character
         engine.addSystem(new EnemySystem(this, character));

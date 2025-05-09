@@ -1,12 +1,15 @@
 package com.deeep.spaceglad.components;
 
 import com.badlogic.ashley.core.Component;
+import com.deeep.spaceglad.managers.EnemyAnimations;
 
 public class StatusComponent implements Component {
+    private AnimationComponent animationComponent;
     public boolean alive, running, attacking;
     public float aliveStateTime;
 
-    public StatusComponent() {
+    public StatusComponent(AnimationComponent animationComponent) {
+        this.animationComponent = animationComponent;
         alive = true;
         running = true;
     }
@@ -19,4 +22,7 @@ public class StatusComponent implements Component {
         this.alive = alive;
     }
 
+    private void playDeathAnim2() {
+        animationComponent.animate(EnemyAnimations.id, EnemyAnimations.offsetDeath2, EnemyAnimations.durationDeath2, 1, 3);
+    }
 }

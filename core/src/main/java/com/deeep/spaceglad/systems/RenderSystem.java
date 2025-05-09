@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.math.Vector3;
 import com.deeep.spaceglad.Core;
+import com.deeep.spaceglad.Settings;
+import com.deeep.spaceglad.components.AnimationComponent;
 import com.deeep.spaceglad.components.EnemyComponent;
 import com.deeep.spaceglad.components.GunComponent;
 import com.deeep.spaceglad.components.ModelComponent;
@@ -81,6 +83,8 @@ public class RenderSystem extends EntitySystem {
                 ModelComponent mod = entities.get(x).getComponent(ModelComponent.class);
                 if (isVisible(camera, mod.instance)) batch.render(mod.instance);
             }
+            if (entities.get(x).getComponent(AnimationComponent.class) != null && !Settings.Paused)
+                entities.get(x).getComponent(AnimationComponent.class).update(delta);
         }
         batch.end();
         shadowLight.end();

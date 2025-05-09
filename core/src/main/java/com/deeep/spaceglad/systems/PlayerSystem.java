@@ -10,14 +10,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.bullet.collision.ClosestRayResultCallback;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
-import com.deeep.spaceglad.Core;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.deeep.spaceglad.Assets;
 import com.deeep.spaceglad.GameWorld;
 import com.deeep.spaceglad.Settings;
 import com.deeep.spaceglad.UI.GameUI;
@@ -26,7 +27,8 @@ import com.deeep.spaceglad.components.EnemyComponent;
 import com.deeep.spaceglad.components.ModelComponent;
 import com.deeep.spaceglad.components.PlayerComponent;
 import com.deeep.spaceglad.components.StatusComponent;
-import com.deeep.spaceglad.screens.ControllerWidget;
+import com.deeep.spaceglad.managers.ControllerWidget;
+import com.deeep.spaceglad.screens.GameScreen;
 
 public class PlayerSystem extends EntitySystem implements EntityListener, InputProcessor {
     private Entity player;
@@ -42,11 +44,28 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     Vector3 rayTo = new Vector3();
     private GameWorld gameWorld;
 
+    private TextButton fireButton;
+
     public PlayerSystem(Camera camera, GameUI gameUI, GameWorld gameWorld) {
         this.camera = camera;
         this.gameUI = gameUI;
         this.gameWorld = gameWorld;
         rayTestCB = new ClosestRayResultCallback(Vector3.Zero, Vector3.Z);
+
+        if (Gdx.app.getType() == Application.ApplicationType.Android){
+            fireButton = new TextButton("fire", Assets.skin);
+            fireButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    fire();
+                }
+            });
+            fireButton.setSize(Gdx.graphics.getWidth() / 8f,
+                Gdx.graphics.getWidth() / 8f);
+            fireButton.setPosition(Gdx.graphics.getWidth() - fireButton.getWidth() * 1.5f,
+                Gdx.graphics.getHeight() - fireButton.getHeight() * 1.5f);
+            gameUI.stage.addActor(fireButton);
+        }
 //        characterComponent.characterController.setJumpSpeed(10);
 //        characterComponent.characterController.setFallSpeed(10);
     }
@@ -84,10 +103,10 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
         walk.y = 0;
         walk.setLength(camera.direction.len());
         if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            tmp.set(walk).scl(ControllerWidget.getMovementVector().y);
+            tmp.set(walk).scl(ControllerWidget.getMovementVector().y * 2);
             characterComponent.walkDirection.add(tmp);
 
-            tmp.set(walk).crs(camera.up).scl(ControllerWidget.getMovementVector().x);
+            tmp.set(walk).crs(camera.up).scl(ControllerWidget.getMovementVector().x * 2);
             characterComponent.walkDirection.add(tmp);
         } else {
 
@@ -119,7 +138,7 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
 //            characterComponent.characterController.jump();
 //        }
 
-        if (Gdx.input.justTouched())
+        if (Gdx.input.justTouched() && Gdx.app.getType() == Application.ApplicationType.Desktop)
             fire();
     }
 
