@@ -5,9 +5,6 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Matrix4;
 
-/**
- * Created by Andreas on 8/4/2015.
- */
 public class ModelComponent implements Component {
     public Model model;
     public ModelInstance instance;

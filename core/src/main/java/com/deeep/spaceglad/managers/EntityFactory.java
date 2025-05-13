@@ -39,9 +39,6 @@ import com.deeep.spaceglad.components.PlayerComponent;
 import com.deeep.spaceglad.components.StatusComponent;
 import com.deeep.spaceglad.systems.BulletSystem;
 
-/**
- * Created by Elmar on 7-8-2015.
- */
 public class EntityFactory {
     private static Model playerModel, enemyModel;
     private static Texture playerTexture;
@@ -51,7 +48,7 @@ public class EntityFactory {
 
     static {
         modelBuilder = new ModelBuilder();
-        playerTexture = new Texture(Gdx.files.internal("data/badlogic.jpg"));
+        playerTexture = new Texture(Gdx.files.internal("Models/badlogic.jpg"));
         Material material = new Material(TextureAttribute.createDiffuse(playerTexture),
             ColorAttribute.createSpecular(1, 1, 1, 1), FloatAttribute.createShininess(8f));
         playerModel = modelBuilder.createCapsule(2f, 6f, 16, material, VertexAttributes.Usage.Position |
@@ -96,7 +93,7 @@ public class EntityFactory {
         Entity entity = new Entity();
         ModelLoader<?> modelLoader = new G3dModelLoader(new JsonReader());
         if (enemyModel == null) {
-            enemyModelData = modelLoader.loadModelData(Gdx.files.internal("data/monster.g3dj"));
+            enemyModelData = modelLoader.loadModelData(Gdx.files.internal("Models/monster.g3dj"));
             enemyModel = new Model(enemyModelData, new TextureProvider.FileTextureProvider());
             for (Node node : enemyModel.nodes) node.scale.scl(0.001f);
             enemyModel.calculateTransforms();
@@ -121,7 +118,7 @@ public class EntityFactory {
         bulletSystem.collisionWorld.addAction(entity.getComponent(CharacterComponent.class).characterController);
         entity.add(new EnemyComponent(EnemyComponent.STATE.HUNTING));
         AnimationComponent animationComponent = new AnimationComponent(enemyModelComponent.instance);
-        animationComponent.animate(EnemyAnimations.id, EnemyAnimations.offsetRun1, EnemyAnimations.durationRun1, -1, 1);    //TODO variable animationspeed
+        animationComponent.animate(EnemyAnimations.id, EnemyAnimations.offsetRun1, EnemyAnimations.durationRun1, -1, 1);
         entity.add(animationComponent);
         entity.add(new StatusComponent(animationComponent));
         return entity;
@@ -131,7 +128,7 @@ public class EntityFactory {
     public static Entity loadScene(int x, int y, int z) {
         Entity entity = new Entity();
         ModelLoader<?> modelLoader = new G3dModelLoader(new JsonReader());
-        ModelData modelData = modelLoader.loadModelData(Gdx.files.internal("data/arena_cub.g3dj"));
+        ModelData modelData = modelLoader.loadModelData(Gdx.files.internal("Models/arena_cub.g3dj"));
         Model model = new Model(modelData, new TextureProvider.FileTextureProvider());
         ModelComponent modelComponent = new ModelComponent(model, x, y, z);
         entity.add(modelComponent);
@@ -150,7 +147,7 @@ public class EntityFactory {
     public static Entity loadDome(int x, int y, int z) {
         UBJsonReader jsonReader = new UBJsonReader();
         G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
-        Model model = modelLoader.loadModel(Gdx.files.getFileHandle("data/skydome.g3db", Files.FileType.Internal));
+        Model model = modelLoader.loadModel(Gdx.files.getFileHandle("Models/skydome.g3db", Files.FileType.Internal));
         ModelComponent modelComponent = new ModelComponent(model, x, y, z);
         Entity entity = new Entity();
         entity.add(modelComponent);
@@ -159,7 +156,7 @@ public class EntityFactory {
 
     public static Entity loadGun(float x, float y, float z) {
         ModelLoader<?> modelLoader = new G3dModelLoader(new JsonReader());
-        ModelData modelData = modelLoader.loadModelData(Gdx.files.internal("data/gun.g3dj"));
+        ModelData modelData = modelLoader.loadModelData(Gdx.files.internal("Models/gun.g3dj"));
         Model model = new Model(modelData, new TextureProvider.FileTextureProvider());
         ModelComponent modelComponent = new ModelComponent(model, x, y, z);
         modelComponent.instance.transform.rotate(0, -0.1f, 0, 90);

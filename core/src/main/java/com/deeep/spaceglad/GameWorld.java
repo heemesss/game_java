@@ -48,9 +48,8 @@ public class GameWorld {
         playerSystem.dome = dome;
 //        playerSystem.gun = gun;
         renderSystem.gun = gun;
-        character = EntityFactory.createPlayer(bulletSystem, 10, 0, 0);
+        character = EntityFactory.createPlayer(bulletSystem, 30, 0, 0);
         engine.addEntity(character);
-        engine.addEntity(EntityFactory.createEnemy(bulletSystem, 0, 10, 0));
 
         // need character
         engine.addSystem(new EnemySystem(this, character));

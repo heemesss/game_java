@@ -1,12 +1,9 @@
 package com.deeep.spaceglad.UI;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.utils.Align;
 import com.deeep.spaceglad.Assets;
 import com.deeep.spaceglad.Settings;
 

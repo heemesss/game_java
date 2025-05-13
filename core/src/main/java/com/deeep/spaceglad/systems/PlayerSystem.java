@@ -30,6 +30,8 @@ import com.deeep.spaceglad.components.StatusComponent;
 import com.deeep.spaceglad.managers.ControllerWidget;
 import com.deeep.spaceglad.screens.GameScreen;
 
+import java.util.Arrays;
+
 public class PlayerSystem extends EntitySystem implements EntityListener, InputProcessor {
     private Entity player;
     public Entity dome;
@@ -116,7 +118,7 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
             if (Gdx.input.isKeyPressed(Input.Keys.D)) tmp.set(walk).crs(camera.up);
             characterComponent.walkDirection.add(tmp);
         }
-        characterComponent.walkDirection.scl(10f * delta);
+        characterComponent.walkDirection.scl(20 * delta);
         characterComponent.characterController.setWalkDirection(characterComponent.walkDirection);
 
         // Walk

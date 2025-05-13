@@ -72,5 +72,6 @@ public class GameOverWidget extends Actor {
         stage.unfocus(stage.getKeyboardFocus());
         Gdx.input.setCursorCatched(false);
         Settings.sendScore(PlayerComponent.score);
+        Settings.save();
     }
 }

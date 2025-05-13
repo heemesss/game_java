@@ -16,7 +16,7 @@ public class MainMenuScreen implements Screen {
     Core game;
     Stage stage;
     Image backgroundImage, titleImage;
-    TextButton playButton, quitButton;
+    TextButton playButton, quitButton, leaderboardsButton;
 
     public MainMenuScreen(Core game) {
         this.game = game;
@@ -32,6 +32,7 @@ public class MainMenuScreen implements Screen {
         backgroundImage = new Image(new Texture(Gdx.files.internal("data/backgroundMN.png")));
         titleImage = new Image(new Texture(Gdx.files.internal("data/title.png")));
         playButton = new TextButton("Play", Assets.skin);
+        leaderboardsButton = new TextButton("Leaders", Assets.skin);
         quitButton = new TextButton("Quit", Assets.skin);
     }
 
@@ -40,13 +41,16 @@ public class MainMenuScreen implements Screen {
         titleImage.setSize(Gdx.graphics.getWidth() / 3f, 200);
         titleImage.setPosition(Gdx.graphics.getWidth() / 6f * 2 - titleImage.getWidth() / 2, Gdx.graphics.getHeight() / 2f - titleImage.getHeight() / 2);
         playButton.setSize(256, 128);
-        playButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + playButton.getHeight() * 0.5f);
+        playButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + playButton.getHeight());
         quitButton.setSize(256, 128);
-        quitButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - quitButton.getHeight() * 1.5f);
+        quitButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - quitButton.getHeight() * 2);
+        leaderboardsButton.setSize(256, 128);
+        leaderboardsButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - leaderboardsButton.getHeight() / 2);
         stage.addActor(backgroundImage);
         stage.addActor(titleImage);
         stage.addActor(playButton);
         stage.addActor(quitButton);
+        stage.addActor(leaderboardsButton);
     }
 
     private void setListeners() {
@@ -56,6 +60,14 @@ public class MainMenuScreen implements Screen {
                 game.setScreen(new GameScreen(game));
             }
         });
+
+        leaderboardsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new LeaderboardsScreen(game));
+            }
+        });
+
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

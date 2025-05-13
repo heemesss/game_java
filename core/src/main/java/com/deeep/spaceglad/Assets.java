@@ -12,9 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-/**
- * Created by scanevaro on 01/08/2015.
- */
 public class Assets {
     public static Skin skin;
     public static TextureRegionDrawable prog_bar_full, prog_bar;

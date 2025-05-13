@@ -25,7 +25,6 @@ public class CrosshairWidget extends Actor {
     @Override
     public void act(float delta) {
         if (Settings.Paused) return;
-        //TODO: Add this in a later chapter
         crosshairInnerRing.rotateBy(innerRotationSpeed);
         crosshairOuterRing.rotateBy(outerRotationSpeed);
     }
@@ -35,7 +34,6 @@ public class CrosshairWidget extends Actor {
         if (Settings.Paused) return;
         crosshairDot.draw(batch, parentAlpha);
         crosshairInnerRing.draw(batch, parentAlpha);
-        //TODO: Make this smaller
         crosshairOuterRing.draw(batch, parentAlpha);
     }
 

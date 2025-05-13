@@ -14,9 +14,8 @@ public class Core extends ApplicationAdapter {
     @Override
     public void create() {
         new Assets();
-        new Settings().load();
+        Settings.load();
         Gdx.input.setCatchBackKey(true);
-//        setScreen(new MainMenuScreen(this));
         setScreen(new MainMenuScreen(this));
     }
 

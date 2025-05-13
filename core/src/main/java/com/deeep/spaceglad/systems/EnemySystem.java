@@ -2,6 +2,7 @@ package com.deeep.spaceglad.systems;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
@@ -23,6 +24,12 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     private Matrix4 ghost = new Matrix4();
     private Vector3 translation = new Vector3();
 
+    private float speed = 10f;
+    private int count = 3;
+
+    private int[] xSpawn = {-30, 0, 0, 30};
+    private int[] ySpawn = {0, 30, -30, 0};
+
     ComponentMapper<CharacterComponent> cm = ComponentMapper.getFor(CharacterComponent.class);
     ComponentMapper<StatusComponent> sm = ComponentMapper.getFor(StatusComponent.class);
 
@@ -39,7 +46,9 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     }
 
     public void update(float delta) {
-        if (entities.size() < 3) {
+        speed += delta / 5;
+        count = (int)speed / 5 + 1;
+        if (entities.size() < count) {
             spawnEnemy();
         }
 
@@ -62,7 +71,7 @@ public class EnemySystem extends EntitySystem implements EntityListener {
             cm.get(e).characterDirection.set(-1, 0, 0).rot(mod.instance.transform);
             cm.get(e).walkDirection.set(0, 0, 0);
             cm.get(e).walkDirection.add(cm.get(e).characterDirection);
-            cm.get(e).walkDirection.scl(10f * delta);   //TODO make this change on difficulty
+            cm.get(e).walkDirection.scl(speed * delta);
             cm.get(e).characterController.setWalkDirection(cm.get(e).walkDirection);
 //            cm.get(e).characterController.setGravity(new Vector3(0, -10, 0));
 
@@ -76,7 +85,8 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     }
 
     private void spawnEnemy() {
-        engine.addEntity(EntityFactory.createEnemy(gameWorld.bulletSystem, 15, 0, -5));
+        int i = MathUtils.random(3);
+        engine.addEntity(EntityFactory.createEnemy(gameWorld.bulletSystem, xSpawn[i], -7, ySpawn[i]));
     }
 
     @Override
