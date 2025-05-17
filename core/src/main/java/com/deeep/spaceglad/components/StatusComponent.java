@@ -20,6 +20,8 @@ public class StatusComponent implements Component {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+        if (!alive)
+            playDeathAnim2();
     }
 
     private void playDeathAnim2() {

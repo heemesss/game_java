@@ -61,8 +61,8 @@ public class GameOverWidget extends Actor {
     public void setSize(float width, float height) {
         super.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         image.setSize(width, height);
-        retryB.setSize(width / 2.5f, height / 2);
-        quitB.setSize(width / 2.5f, height / 2);
+        retryB.setSize(width, height / 1.5f);
+        quitB.setSize(width, height / 1.5f);
     }
 
     public void gameOver() {

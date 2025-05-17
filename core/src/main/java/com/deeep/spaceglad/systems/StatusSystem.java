@@ -26,7 +26,7 @@ public class StatusSystem extends EntitySystem {
         for (int i = 0; i < entities.size(); i++) {
             Entity entity = entities.get(i);
             entity.getComponent(StatusComponent.class).update(delta);
-            if (entity.getComponent(StatusComponent.class).aliveStateTime > 0) gameWorld.remove(entity);
+            if (entity.getComponent(StatusComponent.class).aliveStateTime > 3) gameWorld.remove(entity);
         }
     }
 }

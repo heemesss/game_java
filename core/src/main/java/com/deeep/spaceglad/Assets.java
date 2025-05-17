@@ -1,6 +1,7 @@
 package com.deeep.spaceglad;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 public class Assets {
     public static Skin skin;
     public static TextureRegionDrawable prog_bar_full, prog_bar;
+    public static Sound soundGun, soundDeath;
 
     public Assets() {
         skin = new Skin();
@@ -29,9 +31,14 @@ public class Assets {
 
         prog_bar = new TextureRegionDrawable(new Texture("data/progress-bar.png"));
         prog_bar.setName("progress-bar");
+
+        soundGun = Gdx.audio.newSound(Gdx.files.internal("data/soundGun.mp3"));
+        soundDeath = Gdx.audio.newSound(Gdx.files.internal("data/soundDeath.mp3"));
     }
 
     public static void dispose() {
         skin.dispose();
+        soundGun.dispose();
+        soundDeath.dispose();
     }
 }

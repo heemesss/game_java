@@ -156,7 +156,7 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     }
 
     private void fire() {
-        Ray ray = camera.getPickRay(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        Ray ray = camera.getPickRay(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
         rayFrom.set(ray.origin);
         rayTo.set(ray.direction).scl(150f).add(rayFrom);
         rayTestCB.setCollisionObject(null);
@@ -170,9 +170,11 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
                 if(((Entity) obj.userData).getComponent(StatusComponent.class).alive) {
                     ((Entity) obj.userData).getComponent(StatusComponent.class).setAlive(false);
                     PlayerComponent.score += 100;
+                    Assets.soundDeath.play(0.1f);
                 }
             }
         }
+        Assets.soundGun.play(0.1f);
 //        gun.getComponent(AnimationComponent.class).animate("Armature|shoot", 1, 3);
     }
 
@@ -180,7 +182,6 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     public void addedToEngine(Engine engine) {
         engine.addEntityListener(Family.all(PlayerComponent.class).get(), this);
     }
-
 
     @Override
     public boolean keyDown(int keycode) {

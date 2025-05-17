@@ -56,7 +56,7 @@ public class EnemySystem extends EntitySystem implements EntityListener {
             Entity e = entities.get(i);
             ModelComponent mod = e.getComponent(ModelComponent.class);
             ModelComponent playerModel = player.getComponent(ModelComponent.class);
-            if (!sm.get(e).alive) return;
+            if (!sm.get(e).alive) continue;
             playerModel.instance.transform.getTranslation(playerPosition);
             mod.instance.transform.getTranslation(enemyPosition);
 

@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver;
 import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
+import com.deeep.spaceglad.Assets;
 import com.deeep.spaceglad.components.BulletComponent;
 import com.deeep.spaceglad.components.CharacterComponent;
 import com.deeep.spaceglad.components.EnemyComponent;
