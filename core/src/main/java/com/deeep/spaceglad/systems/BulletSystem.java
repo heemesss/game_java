@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.deeep.spaceglad.Assets;
+import com.deeep.spaceglad.GameWorld;
 import com.deeep.spaceglad.components.BulletComponent;
 import com.deeep.spaceglad.components.CharacterComponent;
 import com.deeep.spaceglad.components.EnemyComponent;
@@ -32,11 +33,12 @@ public class BulletSystem extends EntitySystem implements EntityListener {
     private final btConstraintSolver solver;
     public final btDiscreteDynamicsWorld collisionWorld;
     private btGhostPairCallback ghostPairCallback;
+    private GameWorld gameWorld;
 
     public class MyContactListener extends ContactListener {
         @Override
         public void onContactStarted(btCollisionObject colObj0, btCollisionObject colObj1) {
-            if (colObj0.userData instanceof Entity && colObj0.userData instanceof Entity) {
+            if (colObj0.userData instanceof Entity && colObj1.userData instanceof Entity) {
                 Entity entity0 = (Entity) colObj0.userData;
                 Entity entity1 = (Entity) colObj1.userData;
                 if (entity0.getComponent(CharacterComponent.class) != null && entity1.getComponent(CharacterComponent.class) != null) {
@@ -44,17 +46,20 @@ public class BulletSystem extends EntitySystem implements EntityListener {
                         if (entity0.getComponent(StatusComponent.class).alive)
                             entity1.getComponent(PlayerComponent.class).health -= 10;
                         entity0.getComponent(StatusComponent.class).alive = false;
+                        gameWorld.remove(entity0);
                     } else if (entity1.getComponent(EnemyComponent.class) != null && entity0.getComponent(PlayerComponent.class) != null){
                         if (entity1.getComponent(StatusComponent.class).alive)
                             entity0.getComponent(PlayerComponent.class).health -= 10;
                         entity1.getComponent(StatusComponent.class).alive = false;
+                        gameWorld.remove(entity1);
                     }
                 }
             }
         }
     }
 
-    public BulletSystem(){
+    public BulletSystem(GameWorld gameWorld){
+        this.gameWorld = gameWorld;
         MyContactListener myContactListener = new MyContactListener();
         myContactListener.enable();
         collisionConfiguration = new btDefaultCollisionConfiguration();

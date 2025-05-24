@@ -65,7 +65,7 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
             fireButton.setSize(Gdx.graphics.getWidth() / 8f,
                 Gdx.graphics.getWidth() / 8f);
             fireButton.setPosition(Gdx.graphics.getWidth() - fireButton.getWidth() * 1.5f,
-                Gdx.graphics.getHeight() - fireButton.getHeight() * 1.5f);
+                fireButton.getHeight());
             gameUI.stage.addActor(fireButton);
         }
 //        characterComponent.characterController.setJumpSpeed(10);

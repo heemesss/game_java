@@ -33,7 +33,7 @@ public class GameWorld {
     private void addSystems(GameUI gameUI) {
         engine = new Engine();
         engine.addSystem(renderSystem = new RenderSystem());
-        engine.addSystem(bulletSystem = new BulletSystem());
+        engine.addSystem(bulletSystem = new BulletSystem(this));
         engine.addSystem(playerSystem = new PlayerSystem(renderSystem.camera, gameUI, this));
         engine.addSystem(new StatusSystem(this));
         if (debug) bulletSystem.collisionWorld.setDebugDrawer(this.debugDrawer);
