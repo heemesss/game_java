@@ -18,6 +18,19 @@ public class GameScreen implements Screen {
         this.game = game;
         gameUI = new GameUI(game);
 
+//        SpriteBatch spriteBatch = new SpriteBatch();
+//        spriteBatch.begin();
+//        spriteBatch.draw(new Texture("data/loading.jpg"), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//        spriteBatch.end();
+//
+//        gameWorld = new GameWorld(gameUI);
+//        Settings.Paused = false;
+//        Gdx.input.setInputProcessor(gameUI.stage);
+//        Gdx.input.setCursorCatched(true);
+    }
+
+    @Override
+    public void show() {
         SpriteBatch spriteBatch = new SpriteBatch();
         spriteBatch.begin();
         spriteBatch.draw(new Texture("data/loading.jpg"), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -27,11 +40,6 @@ public class GameScreen implements Screen {
         Settings.Paused = false;
         Gdx.input.setInputProcessor(gameUI.stage);
         Gdx.input.setCursorCatched(true);
-    }
-
-    @Override
-    public void show() {
-
     }
 
     @Override

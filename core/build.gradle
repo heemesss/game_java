@@ -5,6 +5,8 @@ dependencies {
   api "com.badlogicgames.ashley:ashley:$ashleyVersion"
   api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation 'com.esotericsoftware.kryo:kryo:2.24.0'
+  implementation fileTree(dir: '/home/heemes/.gradle/caches/modules-2/files-2.1/com.github.crykn/kryonet/2.22.9/35f699763d37f4247d461bb5fbae66640f7226e8', include: ['*.aar', '*.jar'], exclude: [])
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"

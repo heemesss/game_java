@@ -19,7 +19,7 @@ public class GameWorld {
     private DebugDrawer debugDrawer;
     private Engine engine;
     private Entity character, gun;
-    public RenderSystem renderSystem;
+    private RenderSystem renderSystem;
     private PlayerSystem playerSystem;
     public BulletSystem bulletSystem;
 

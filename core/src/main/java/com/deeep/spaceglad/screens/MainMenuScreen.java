@@ -16,7 +16,7 @@ public class MainMenuScreen implements Screen {
     Core game;
     Stage stage;
     Image backgroundImage, titleImage;
-    TextButton playButton, quitButton, leaderboardsButton;
+    TextButton playButton, quitButton, leaderboardsButton, onlineGameButton;
 
     public MainMenuScreen(Core game) {
         this.game = game;
@@ -33,6 +33,7 @@ public class MainMenuScreen implements Screen {
         titleImage = new Image(new Texture(Gdx.files.internal("data/title.png")));
         playButton = new TextButton("Play", Assets.skin);
         leaderboardsButton = new TextButton("Leaders", Assets.skin);
+        onlineGameButton = new TextButton("Online", Assets.skin);
         quitButton = new TextButton("Quit", Assets.skin);
     }
 
@@ -46,9 +47,12 @@ public class MainMenuScreen implements Screen {
         quitButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - quitButton.getHeight() * 2);
         leaderboardsButton.setSize(256, 128);
         leaderboardsButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - leaderboardsButton.getHeight() / 2);
+        onlineGameButton.setSize(256, 128);
+        onlineGameButton.setPosition(0, 0);
         stage.addActor(backgroundImage);
         stage.addActor(titleImage);
         stage.addActor(playButton);
+        stage.addActor(onlineGameButton);
         stage.addActor(quitButton);
         stage.addActor(leaderboardsButton);
     }
@@ -72,6 +76,13 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.exit();
+            }
+        });
+
+        onlineGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new OnlineGameScreen(game));
             }
         });
     }
