@@ -6,13 +6,14 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.deeep.spaceglad.GameWorld;
+import com.deeep.spaceglad.World;
 import com.deeep.spaceglad.components.StatusComponent;
 
 public class StatusSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
-    private GameWorld gameWorld;
+    private World gameWorld;
 
-    public StatusSystem(GameWorld gameWorld) {
+    public StatusSystem(World gameWorld) {
         this.gameWorld = gameWorld;
     }
 

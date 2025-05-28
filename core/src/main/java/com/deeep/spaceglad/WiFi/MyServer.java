@@ -22,7 +22,7 @@ public class MyServer {
         server = new Server();
         server.start();
         try {
-            server.bind(54555, 54777);
+            server.bind(54556, 54778);
         } catch (IOException e) {
             e.printStackTrace();
         }

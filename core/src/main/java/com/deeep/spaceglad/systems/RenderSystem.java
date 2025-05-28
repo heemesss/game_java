@@ -32,6 +32,7 @@ public class RenderSystem extends EntitySystem {
     public PerspectiveCamera camera, gunCamera;
     public Entity gun;
     private Vector3 position;
+    public ModelInstance enemy;
 
     public RenderSystem(){
         camera = new PerspectiveCamera(FOV, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -67,8 +68,6 @@ public class RenderSystem extends EntitySystem {
 //        camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f);
 //        camera.update(true);
 
-
-
     }
 
     private boolean isVisible(Camera cam, final ModelInstance instance) {
@@ -98,6 +97,8 @@ public class RenderSystem extends EntitySystem {
                 batch.render(mod.instance, environment);
             }
         }
+        if (enemy != null)
+            batch.render(enemy, environment);
         batch.end();
 
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);

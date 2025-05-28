@@ -14,14 +14,12 @@ import com.deeep.spaceglad.systems.PlayerSystem;
 import com.deeep.spaceglad.systems.RenderSystem;
 import com.deeep.spaceglad.systems.StatusSystem;
 
-public class GameWorld {
+public class GameWorld extends World{
     private static final boolean debug = false;
     private DebugDrawer debugDrawer;
-    private Engine engine;
     private Entity character, gun;
     private RenderSystem renderSystem;
     private PlayerSystem playerSystem;
-    public BulletSystem bulletSystem;
 
     public GameWorld(GameUI gameUI){
         Bullet.init();
@@ -89,11 +87,6 @@ public class GameWorld {
 
     public void resize(int width, int height) {
         renderSystem.resize(width, height);
-    }
-
-    public void remove(Entity entity) {
-        engine.removeEntity(entity);
-        bulletSystem.removeBody(entity);
     }
 
     public void dispose() {

@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.deeep.spaceglad.GameWorld;
+import com.deeep.spaceglad.World;
 import com.deeep.spaceglad.components.*;
 import com.deeep.spaceglad.managers.EntityFactory;
 
@@ -18,7 +19,7 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     private Entity player;
     private Quaternion quat = new Quaternion();
     private Engine engine;
-    private GameWorld gameWorld;
+    private World gameWorld;
     private Vector3 playerPosition = new Vector3();
     private Vector3 enemyPosition = new Vector3();
     private Matrix4 ghost = new Matrix4();
@@ -33,7 +34,7 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     ComponentMapper<CharacterComponent> cm = ComponentMapper.getFor(CharacterComponent.class);
     ComponentMapper<StatusComponent> sm = ComponentMapper.getFor(StatusComponent.class);
 
-    public EnemySystem(GameWorld gameWorld, Entity entity) {
+    public EnemySystem(World gameWorld, Entity entity) {
         this.gameWorld = gameWorld;
         player = entity;
     }

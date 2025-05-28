@@ -27,9 +27,9 @@ public class MyClient {
 
         client = new Client();
         client.start();
-        address = client.discoverHost(54777, 5000);
+        address = client.discoverHost(54778, 5000);
         try {
-            client.connect(5000, address, 54555, 54777);
+            client.connect(5000, address, 54556, 54778);
         } catch (IOException e) {
             isCantConnected = true; // если не удалось подключиться
             e.printStackTrace();

@@ -22,6 +22,7 @@ import com.deeep.spaceglad.Assets;
 import com.deeep.spaceglad.GameWorld;
 import com.deeep.spaceglad.Settings;
 import com.deeep.spaceglad.UI.GameUI;
+import com.deeep.spaceglad.World;
 import com.deeep.spaceglad.components.CharacterComponent;
 import com.deeep.spaceglad.components.EnemyComponent;
 import com.deeep.spaceglad.components.ModelComponent;
@@ -40,15 +41,15 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     private PlayerComponent playerComponent;
     private GameUI gameUI;
     private CharacterComponent characterComponent;
-    private ModelComponent modelComponent;
+    public ModelComponent modelComponent;
     private Matrix4 ghost = new Matrix4();
     Vector3 rayFrom = new Vector3();
     Vector3 rayTo = new Vector3();
-    private GameWorld gameWorld;
+    private World gameWorld;
 
     private TextButton fireButton;
 
-    public PlayerSystem(Camera camera, GameUI gameUI, GameWorld gameWorld) {
+    public PlayerSystem(Camera camera, GameUI gameUI, World gameWorld) {
         this.camera = camera;
         this.gameUI = gameUI;
         this.gameWorld = gameWorld;
@@ -84,7 +85,7 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
         if (Gdx.app.getType() == Application.ApplicationType.Android) {
             for (int i = 0; Gdx.input.isTouched(i); i++){
                 if (Gdx.input.getX(i) > Gdx.graphics.getWidth() / 2) {
-                    System.out.println(Gdx.input.getX(i));
+//                    System.out.println(Gdx.input.getX(i));
                     camera.rotate(camera.up, -Gdx.input.getDeltaX(i) * 0.25f);
                     camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY(i) * 0.25f);
                     break;
@@ -173,6 +174,9 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
                     Assets.soundDeath.play(0.1f);
                 }
             }
+            if (((Entity) obj.userData).getComponent(PlayerComponent.class) != null) {
+                System.out.println("GJGFKGFJGFJKD");
+            }
         }
         Assets.soundGun.play(0.1f);
 //        gun.getComponent(AnimationComponent.class).animate("Armature|shoot", 1, 3);
@@ -230,10 +234,12 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
 
     @Override
     public void entityAdded(Entity entity) {
-        player = entity;
-        playerComponent = entity.getComponent(PlayerComponent.class);
-        characterComponent = entity.getComponent(CharacterComponent.class);
-        modelComponent = entity.getComponent(ModelComponent.class);
+        if (player == null){
+            player = entity;
+            playerComponent = entity.getComponent(PlayerComponent.class);
+            characterComponent = entity.getComponent(CharacterComponent.class);
+            modelComponent = entity.getComponent(ModelComponent.class);
+        }
     }
 
     @Override

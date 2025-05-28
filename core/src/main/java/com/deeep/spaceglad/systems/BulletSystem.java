@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.deeep.spaceglad.Assets;
 import com.deeep.spaceglad.GameWorld;
+import com.deeep.spaceglad.World;
 import com.deeep.spaceglad.components.BulletComponent;
 import com.deeep.spaceglad.components.CharacterComponent;
 import com.deeep.spaceglad.components.EnemyComponent;
@@ -33,7 +34,7 @@ public class BulletSystem extends EntitySystem implements EntityListener {
     private final btConstraintSolver solver;
     public final btDiscreteDynamicsWorld collisionWorld;
     private btGhostPairCallback ghostPairCallback;
-    private GameWorld gameWorld;
+    private World gameWorld;
 
     public class MyContactListener extends ContactListener {
         @Override
@@ -58,7 +59,7 @@ public class BulletSystem extends EntitySystem implements EntityListener {
         }
     }
 
-    public BulletSystem(GameWorld gameWorld){
+    public BulletSystem(World gameWorld){
         this.gameWorld = gameWorld;
         MyContactListener myContactListener = new MyContactListener();
         myContactListener.enable();
