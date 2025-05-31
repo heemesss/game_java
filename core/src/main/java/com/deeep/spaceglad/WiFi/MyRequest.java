@@ -9,5 +9,5 @@ import com.deeep.spaceglad.components.ModelComponent;
  */
 public class MyRequest {
     public String text = "";
-    public float x, y, z, qx, qy, qz, qw;
+    public float x, y, z, qx, qy, qz, qw, rotate;
 }

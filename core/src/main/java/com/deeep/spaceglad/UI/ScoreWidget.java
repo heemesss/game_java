@@ -8,6 +8,7 @@ import com.deeep.spaceglad.components.PlayerComponent;
 
 public class ScoreWidget extends Actor {
     Label label;
+    public int player = -1, enemy = -1;
 
     public ScoreWidget() {
         label = new Label("", Assets.skin);
@@ -16,7 +17,10 @@ public class ScoreWidget extends Actor {
     @Override
     public void act(float delta) {
         label.act(delta);
-        label.setText("Score : " + PlayerComponent.score);
+        if (player == -1)
+            label.setText("Score : " + PlayerComponent.score);
+        else
+            label.setText(player + ":" + enemy);
     }
 
     @Override

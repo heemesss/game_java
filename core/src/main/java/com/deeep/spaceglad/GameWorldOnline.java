@@ -2,25 +2,34 @@ package com.deeep.spaceglad;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.deeep.spaceglad.UI.GameUI;
+import com.deeep.spaceglad.UI.ScoreWidget;
 import com.deeep.spaceglad.WiFi.MyClient;
 import com.deeep.spaceglad.WiFi.MyRequest;
 import com.deeep.spaceglad.WiFi.MyResponse;
 import com.deeep.spaceglad.WiFi.MyServer;
 import com.deeep.spaceglad.components.CharacterComponent;
 import com.deeep.spaceglad.components.ModelComponent;
+import com.deeep.spaceglad.components.PlayerComponent;
 import com.deeep.spaceglad.managers.EntityFactory;
 import com.deeep.spaceglad.systems.BulletSystem;
 import com.deeep.spaceglad.systems.EnemySystem;
 import com.deeep.spaceglad.systems.PlayerSystem;
 import com.deeep.spaceglad.systems.RenderSystem;
 import com.deeep.spaceglad.systems.StatusSystem;
+
+import java.util.Objects;
+
+import javax.security.auth.login.AccountLockedException;
 
 public class GameWorldOnline extends World {
     private static final boolean debug = false;
@@ -33,6 +42,8 @@ public class GameWorldOnline extends World {
     private MyRequest request;
     private MyResponse response;
 
+    private GameUI gameUI;
+
     public GameWorldOnline(GameUI gameUI, MyServer server, MyClient client, MyRequest request,
                            MyResponse response){
         this.server = server;
@@ -42,6 +53,9 @@ public class GameWorldOnline extends World {
         Bullet.init();
         setDebug();
         addSystems(gameUI);
+        gameUI.scoreWidget.player = 0;
+        gameUI.scoreWidget.enemy = 0;
+        this.gameUI = gameUI;
         addEntities();
     }
 
@@ -55,15 +69,30 @@ public class GameWorldOnline extends World {
     }
 
     private void addEntities(){
-        engine.addEntity(EntityFactory.loadScene(0, 0, 0));
+        engine.addEntity(EntityFactory.loadScene(0, 0, 0, "arena2"));
         Entity dome = EntityFactory.loadDome(0, 0, 0);
         engine.addEntity(dome);
         engine.addEntity(gun = EntityFactory.loadGun(2.5f, -1.9f, -4));
         playerSystem.dome = dome;
         renderSystem.gun = gun;
-        engine.addEntity(character = EntityFactory.createPlayer(bulletSystem, 30, 0, 30));
+        if (client != null){
+            engine.addEntity(character = EntityFactory.createPlayer(bulletSystem, 44, 0, 44));
 
-        engine.addEntity(enemy = EntityFactory.createPlayer(bulletSystem, -30, 0, -30));
+            engine.addEntity(enemy = EntityFactory.createPlayer(bulletSystem, -44, 0, -44));
+        }
+        if (server != null){
+            engine.addEntity(character = EntityFactory.createPlayer(bulletSystem, -44, 0, -44));
+            setPositionCharacter(character);
+
+            engine.addEntity(enemy = EntityFactory.createPlayer(bulletSystem, 44, 0, 44));
+        }
+    }
+
+    private void setPositionCharacter(Entity entity){
+        entity.getComponent(ModelComponent.class).instance.transform.set(
+            MathUtils.random(1) == 0 ? -44 : 44, 0,
+            MathUtils.random(1) == 0 ? -44 : 44, 0, 0, 0, 0);
+        entity.getComponent(CharacterComponent.class).ghostObject.setWorldTransform(entity.getComponent(ModelComponent.class).instance.transform);
     }
 
     public void render(float delta) {
@@ -81,22 +110,36 @@ public class GameWorldOnline extends World {
             request.x = translation.x;
             request.y = translation.y;
             request.z = translation.z;
-            Quaternion quat = new Quaternion().setFromAxis(0, 1, 0, (float) Math.toDegrees(renderSystem.camera.direction.x - 1));
+            Quaternion quat = new Quaternion().setFromAxis(0, 1, 0, (float) Math.toDegrees(renderSystem.camera.direction.x));
 
             request.qx = quat.x;
             request.qy = quat.y;
             request.qz = quat.z;
             request.qw = quat.w;
-            System.out.println("===========");
-            System.out.println(quat.y);
-            System.out.println(renderSystem.camera.direction.y);
-            System.out.println(renderSystem.camera.direction.x);
+            request.rotate = renderSystem.camera.direction.x;
+
+            if (enemy.getComponent(PlayerComponent.class).health <= 0){
+                request.text = "DIE";
+                enemy.getComponent(PlayerComponent.class).health = 100;
+                gameUI.scoreWidget.player += 1;
+            } else {
+                request.text = "";
+            }
 
             client.send();
 
+            //position
             enemy.getComponent(ModelComponent.class).instance.transform.set(client.getResponse().x,
-                client.getResponse().y, client.getResponse().z, client.getResponse().qx, client.getResponse().qy,client.getResponse().qz, client.getResponse().qw);
-            renderSystem.enemy = enemy.getComponent(ModelComponent.class).instance;
+                client.getResponse().y, client.getResponse().z, 0, 0, 0, 0);
+            // rotate
+//            enemy.getComponent(ModelComponent.class).instance.transform.setToRotation(0, 1, 0,
+//                0);
+            // hitbox
+            enemy.getComponent(CharacterComponent.class).ghostObject.setWorldTransform(enemy.getComponent(ModelComponent.class).instance.transform);
+            if (Objects.equals(client.getResponse().text, "DIE")){
+                setPositionCharacter(character);
+                gameUI.scoreWidget.enemy += 1;
+            }
 
         }
         else if (server != null){
@@ -105,20 +148,32 @@ public class GameWorldOnline extends World {
             response.x = translation.x;
             response.y = translation.y;
             response.z = translation.z;
-            Quaternion quat = new Quaternion().setFromAxis(0, 1, 0, (float) Math.toDegrees(renderSystem.camera.direction.x - 1));
+            Quaternion quat = new Quaternion().setFromAxis(0, 1, 0, (float) Math.toDegrees(renderSystem.camera.direction.x));
             response.qx = quat.x;
             response.qy = quat.y;
             response.qz = quat.z;
             response.qw = quat.w;
-            System.out.println("===========");
-            System.out.println(quat.y);
-            System.out.println(renderSystem.camera.direction.y);
-            System.out.println(renderSystem.camera.direction.x);
+            response.rotate = renderSystem.camera.direction.x;
 
-
+            if (enemy.getComponent(PlayerComponent.class).health <= 0){
+                response.text = "DIE";
+                enemy.getComponent(PlayerComponent.class).health = 100;
+                gameUI.scoreWidget.player += 1;
+            } else {
+                response.text = "";
+            }
+            // position
             enemy.getComponent(ModelComponent.class).instance.transform.set(server.getRequest().x,
-                server.getRequest().y, server.getRequest().z,  server.getRequest().qx, server.getRequest().qy,server.getRequest().qz, server.getRequest().qw);
-            renderSystem.enemy = enemy.getComponent(ModelComponent.class).instance;
+                server.getRequest().y, server.getRequest().z,  0, 0, 0, 0);
+            // rotate
+//            enemy.getComponent(ModelComponent.class).instance.transform.setToRotation(new Vector3(0, 1, 0),
+//                0);
+            // hitbox
+            enemy.getComponent(CharacterComponent.class).ghostObject.setWorldTransform(enemy.getComponent(ModelComponent.class).instance.transform);
+            if (Objects.equals(server.getRequest().text, "DIE")){
+                setPositionCharacter(character);
+                gameUI.scoreWidget.enemy += 1;
+            }
         }
     }
 

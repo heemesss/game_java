@@ -20,7 +20,7 @@ public class OnlineGameScreen implements Screen {
     public OnlineGameScreen(Core game, MyServer server, MyClient client, MyRequest request,
                             MyResponse response){
         this.game = game;
-        gameUI = new GameUI(game);
+        gameUI = new GameUI(game, true);
         gameWorld = new GameWorldOnline(gameUI, server, client, request, response);
         Settings.Paused = false;
         Gdx.input.setInputProcessor(gameUI.stage);

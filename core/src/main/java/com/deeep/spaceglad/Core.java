@@ -43,6 +43,10 @@ public class Core extends ApplicationAdapter {
         }
     }
 
+    public Screen getScreen(){
+        return screen;
+    }
+
     @Override
     public void dispose() {
         Settings.save();

@@ -174,8 +174,10 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
                     Assets.soundDeath.play(0.1f);
                 }
             }
-            if (((Entity) obj.userData).getComponent(PlayerComponent.class) != null) {
+            if (((Entity) obj.userData).getComponent(PlayerComponent.class) != null &&
+                ((Entity) obj.userData).getComponent(CharacterComponent.class) != characterComponent) {
                 System.out.println("GJGFKGFJGFJKD");
+                ((Entity) obj.userData).getComponent(PlayerComponent.class).health = 0;
             }
         }
         Assets.soundGun.play(0.1f);

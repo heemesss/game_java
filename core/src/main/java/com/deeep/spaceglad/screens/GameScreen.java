@@ -16,7 +16,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(Core game) {
         this.game = game;
-        gameUI = new GameUI(game);
+        gameUI = new GameUI(game, false);
 
 //        SpriteBatch spriteBatch = new SpriteBatch();
 //        spriteBatch.begin();

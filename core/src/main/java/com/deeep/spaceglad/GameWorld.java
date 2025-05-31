@@ -38,7 +38,7 @@ public class GameWorld extends World{
     }
 
     private void addEntities(){
-        engine.addEntity(EntityFactory.loadScene(0, 0, 0));
+        engine.addEntity(EntityFactory.loadScene(0, 0, 0, "arena2"));
         Entity dome = EntityFactory.loadDome(0, 0, 0);
 //        engine.addEntity(EntityFactory.loadDome(0, 0, 0));
         engine.addEntity(dome);
