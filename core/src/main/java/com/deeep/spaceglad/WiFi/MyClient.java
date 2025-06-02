@@ -30,7 +30,7 @@ public class MyClient {
         address = client.discoverHost(54778, 5000);
         try {
             client.connect(5000, address, 54556, 54778);
-        } catch (IOException e) {
+        } catch (Exception e) {
             isCantConnected = true; // если не удалось подключиться
             e.printStackTrace();
         }
@@ -45,6 +45,21 @@ public class MyClient {
                 if (object instanceof MyResponse) {
                     response = (MyResponse) object;
                 }
+            }
+
+            @Override
+            public void connected(Connection connection) {
+//                Listener.super.connected(connection);
+            }
+
+            @Override
+            public void disconnected(Connection connection) {
+//                Listener.super.disconnected(connection);
+            }
+
+            @Override
+            public void idle(Connection connection) {
+//                Listener.super.idle(connection);
             }
         });
     }

@@ -53,12 +53,12 @@ public class EnemySystem extends EntitySystem implements EntityListener {
             spawnEnemy();
         }
 
+        ModelComponent playerModel = player.getComponent(ModelComponent.class);
+        playerModel.instance.transform.getTranslation(playerPosition);
         for (int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
             ModelComponent mod = e.getComponent(ModelComponent.class);
-            ModelComponent playerModel = player.getComponent(ModelComponent.class);
             if (!sm.get(e).alive) continue;
-            playerModel.instance.transform.getTranslation(playerPosition);
             mod.instance.transform.getTranslation(enemyPosition);
 
             float dX = playerPosition.x - enemyPosition.x;

@@ -97,11 +97,12 @@ public class OnlineMenuScreen implements Screen {
                 if (!isServer && !isClient && !isEnterIP){
                     isClient = true;
                     client = new MyClient(requestFromClient);
-                    ipAddressOfServer = client.getIp().getHostAddress();
-                    label.setText(ipAddressOfServer);
-                    requestFromClient.text = "Connect";
-                    client.send();
-                    if (client.isCantConnected){
+                    try {
+                        ipAddressOfServer = client.getIp().getHostAddress();
+                        label.setText(ipAddressOfServer);
+                        requestFromClient.text = "Connect";
+                        client.send();
+                    } catch (Exception e) {
                         isClient = false;
                         client = null;
                         ipAddressOfServer = "Server not found";

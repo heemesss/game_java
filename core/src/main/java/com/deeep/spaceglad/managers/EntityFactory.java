@@ -93,10 +93,10 @@ public class EntityFactory {
         Entity entity = new Entity();
         ModelLoader<?> modelLoader = new G3dModelLoader(new JsonReader());
         if (enemyModel == null) {
-//            enemyModelData = modelLoader.loadModelData(Gdx.files.internal("Models/run.g3dj"));
+//            enemyModelData = modelLoader.loadModelData(Gdx.files.internal("Models/hero.g3dj"));
             enemyModelData = modelLoader.loadModelData(Gdx.files.internal("Models/monster.g3dj"));
             enemyModel = new Model(enemyModelData, new TextureProvider.FileTextureProvider());
-            for (Node node : enemyModel.nodes) node.scale.scl(0.001f);
+            for (Node node : enemyModel.nodes) node.scale.scl(100);
             enemyModel.calculateTransforms();
         }
         enemyModelComponent = new ModelComponent(enemyModel, x, y, z);
@@ -119,7 +119,7 @@ public class EntityFactory {
         bulletSystem.collisionWorld.addAction(entity.getComponent(CharacterComponent.class).characterController);
         entity.add(new EnemyComponent(EnemyComponent.STATE.HUNTING));
         AnimationComponent animationComponent = new AnimationComponent(enemyModelComponent.instance);
-        animationComponent.animate(EnemyAnimations.id, EnemyAnimations.offsetRun1, EnemyAnimations.durationRun1, -1, 1);
+        animationComponent.animate(EnemyAnimations.id, -1, 1);
         entity.add(animationComponent);
         entity.add(new StatusComponent(animationComponent));
         return entity;

@@ -34,10 +34,29 @@ public class MyServer {
         server.addListener(new Listener() {
             @Override
             public void received(Connection connection, Object object) {
+//                Listener.super.received(connection, object);
                 if (object instanceof MyRequest) {
                     request = (MyRequest) object;
                     connection.sendTCP(response);
                 }
+            }
+
+            @Override
+            public void connected(Connection connection) {
+//                Listener.super.connected(connection);
+                connection.isConnected();
+            }
+
+            @Override
+            public void disconnected(Connection connection) {
+                Listener.super.disconnected(connection);
+                connection.close();
+            }
+
+            @Override
+            public void idle(Connection connection) {
+//                Listener.super.idle(connection);
+                connection.isIdle();
             }
         });
     }

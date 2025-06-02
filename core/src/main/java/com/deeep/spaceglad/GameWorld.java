@@ -15,7 +15,7 @@ import com.deeep.spaceglad.systems.RenderSystem;
 import com.deeep.spaceglad.systems.StatusSystem;
 
 public class GameWorld extends World{
-    private static final boolean debug = false;
+    private static final boolean debug = true;
     private DebugDrawer debugDrawer;
     private Entity character, gun;
     private RenderSystem renderSystem;
