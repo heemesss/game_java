@@ -106,11 +106,12 @@ public class GameWorldOnline extends World {
             request.z = translation.z;
             request.rotate = playerSystem.getX;
 
-            if (enemy.getComponent(PlayerComponent.class).health <= 0){
+            if (enemy.getComponent(PlayerComponent.class).health <= 0 && !Objects.equals(request.text, "DIE")){
                 request.text = "DIE";
                 enemy.getComponent(PlayerComponent.class).health = 100;
                 gameUI.scoreWidget.player += 1;
-            } else {
+                gameUI.deathWidget.setKill();
+            } else if (Objects.equals(request.text, "DEATH")) {
                 request.text = "";
             }
 
@@ -124,9 +125,11 @@ public class GameWorldOnline extends World {
                 client.getResponse().y - 2, client.getResponse().z), new Quaternion(), new Vector3(1, 1, 1)));
             // rotate
             enemy.getComponent(ModelComponent.class).instance.transform.rotate(0, 1, 0, -client.getResponse().rotate - 90);
-            if (Objects.equals(client.getResponse().text, "DIE")){
+            if (Objects.equals(client.getResponse().text, "DIE") && !Objects.equals(request.text, "DEATH")){
                 setPositionCharacter(character);
                 gameUI.scoreWidget.enemy += 1;
+                request.text = "DEATH";
+                gameUI.deathWidget.setDeath();
             }
 
         }
@@ -138,11 +141,12 @@ public class GameWorldOnline extends World {
             response.z = translation.z;
             response.rotate = playerSystem.getX;
 
-            if (enemy.getComponent(PlayerComponent.class).health <= 0){
+            if (enemy.getComponent(PlayerComponent.class).health <= 0 && !Objects.equals(response.text, "DIE")){
                 response.text = "DIE";
                 enemy.getComponent(PlayerComponent.class).health = 100;
                 gameUI.scoreWidget.player += 1;
-            } else {
+                gameUI.deathWidget.setKill();
+            } else if (Objects.equals(response.text, "DIE")) {
                 response.text = "";
             }
             // hitbox
@@ -153,9 +157,11 @@ public class GameWorldOnline extends World {
                 server.getRequest().y - 2, server.getRequest().z), new Quaternion(), new Vector3(1, 1, 1)));
             // rotate
             enemy.getComponent(ModelComponent.class).instance.transform.rotate(0, 1, 0, -server.getRequest().rotate - 90);
-            if (Objects.equals(server.getRequest().text, "DIE")){
+            if (Objects.equals(server.getRequest().text, "DIE") && !Objects.equals(response.text, "DEATH")){
                 setPositionCharacter(character);
                 gameUI.scoreWidget.enemy += 1;
+                response.text = "DEATH";
+                gameUI.deathWidget.setDeath();
             }
         }
 

@@ -17,6 +17,7 @@ public class GameUI {
     private PauseWidget pauseWidget;
     private CrosshairWidget crosshairWidget;
     public GameOverWidget gameOverWidget;
+    public DeathWidget deathWidget;
     private Label fpsLabel;
     private ControllerWidget controllerWidget;
     private StopwatchWidget stopwatchWidget;
@@ -38,6 +39,7 @@ public class GameUI {
         gameOverWidget = new GameOverWidget(game, stage);
         crosshairWidget = new CrosshairWidget();
         fpsLabel = new Label("", Assets.skin);
+        deathWidget = new DeathWidget();
         if (!isOnline)
             stopwatchWidget = new StopwatchWidget();
         if (Gdx.app.getType() == Application.ApplicationType.Android) controllerWidget = new ControllerWidget();
@@ -54,6 +56,7 @@ public class GameUI {
         gameOverWidget.setPosition(Gdx.graphics.getWidth() / 2f - 140, Gdx.graphics.getHeight() / 2f);
         crosshairWidget.setPosition(Gdx.graphics.getWidth() / 2f - 16, Gdx.graphics.getHeight() / 2f - 16);
         crosshairWidget.setSize(32, 32);
+        deathWidget.setSize(32, 32);
         if (!isOnline){
             stopwatchWidget.setSize(140, 25);
             stopwatchWidget.setPosition(Gdx.graphics.getWidth() / 2f - healthWidget.getWidth() / 2, Gdx.graphics.getHeight() - stopwatchWidget.getHeight());
@@ -70,6 +73,7 @@ public class GameUI {
 
         stage.addActor(fpsLabel);
         if (Gdx.app.getType() == Application.ApplicationType.Android) controllerWidget.addToStage(stage);
+        stage.addActor(deathWidget);
     }
 
     public void update(float delta) {

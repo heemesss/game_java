@@ -175,12 +175,14 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
                     ((Entity) obj.userData).getComponent(StatusComponent.class).setAlive(false);
                     PlayerComponent.score += 100;
                     Assets.soundDeath.play(0.1f);
+                    gameUI.deathWidget.setKill();
                 }
             }
             if (((Entity) obj.userData).getComponent(PlayerComponent.class) != null &&
                 ((Entity) obj.userData).getComponent(CharacterComponent.class) != characterComponent) {
                 System.out.println("GJGFKGFJGFJKD");
                 ((Entity) obj.userData).getComponent(PlayerComponent.class).health = 0;
+                gameUI.deathWidget.setKill();
             }
         }
         Assets.soundGun.play(0.1f);

@@ -41,14 +41,17 @@ public class MainMenuScreen implements Screen {
         backgroundImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         titleImage.setSize(Gdx.graphics.getWidth() / 3f, 200);
         titleImage.setPosition(Gdx.graphics.getWidth() / 6f * 2 - titleImage.getWidth() / 2, Gdx.graphics.getHeight() / 2f - titleImage.getHeight() / 2);
+
         playButton.setSize(256, 128);
-        playButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + playButton.getHeight());
         quitButton.setSize(256, 128);
-        quitButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - quitButton.getHeight() * 2);
         leaderboardsButton.setSize(256, 128);
-        leaderboardsButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - leaderboardsButton.getHeight() / 2);
         onlineGameButton.setSize(256, 128);
-        onlineGameButton.setPosition(0, 0);
+
+        playButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + playButton.getHeight() * 1.75f);
+        onlineGameButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + onlineGameButton.getHeight() * 0.25f);
+        leaderboardsButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - leaderboardsButton.getHeight() * 1.25f);
+        quitButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - quitButton.getHeight() * 2.75f);
+
         stage.addActor(backgroundImage);
         stage.addActor(titleImage);
         stage.addActor(playButton);

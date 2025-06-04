@@ -2,8 +2,10 @@ package com.deeep.spaceglad.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -22,10 +24,11 @@ import java.util.Enumeration;
 import java.util.Objects;
 
 public class OnlineMenuScreen implements Screen {
-    Core game;
-    Stage stage;
-    TextButton hostButton, clientButton, startButton;
-    Label label;
+    private Core game;
+    private Stage stage;
+    private TextButton hostButton, clientButton, startButton;
+    private Label label, labelMessage;
+    private Image background;
 
     boolean isEnterIP;
 
@@ -54,10 +57,12 @@ public class OnlineMenuScreen implements Screen {
     }
 
     private void setWidgets() {
-        hostButton = new TextButton("I am Server", Assets.skin);
-        clientButton = new TextButton("I am Client", Assets.skin);
+        background = new Image(new Texture(Gdx.files.internal("data/backgroundMN.png")));
+        hostButton = new TextButton("Create", Assets.skin);
+        clientButton = new TextButton("Join", Assets.skin);
         startButton = new TextButton("Start", Assets.skin);
         label = new Label(ipAddressOfServer, Assets.skin);
+        labelMessage = new Label("Create or Join", Assets.skin);
     }
 
     private void configureWidgers() {
@@ -71,11 +76,17 @@ public class OnlineMenuScreen implements Screen {
         startButton.setVisible(false);
 
         label.setSize(256, 128);
+        labelMessage.setSize(256, 128);
+        labelMessage.setPosition(Gdx.graphics.getWidth() / 2f - labelMessage.getWidth(), labelMessage.getHeight() / 2f);
 
+        background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        stage.addActor(background);
         stage.addActor(hostButton);
         stage.addActor(clientButton);
         stage.addActor(label);
         stage.addActor(startButton);
+        stage.addActor(labelMessage);
     }
 
     private void setListeners() {
@@ -83,10 +94,12 @@ public class OnlineMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!isServer && !isClient && !isEnterIP){
+                    labelMessage.setText("Creating...");
                     server = new MyServer(responseFromServer);
                     isServer = true;
                     ipAddressOfServer = detectIP();
                     label.setText(ipAddressOfServer);
+                    labelMessage.setText("Ask someone to connect");
                 }
             }
         });
@@ -95,6 +108,7 @@ public class OnlineMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!isServer && !isClient && !isEnterIP){
+                    labelMessage.setText("Connecting...");
                     isClient = true;
                     client = new MyClient(requestFromClient);
                     try {
@@ -102,7 +116,9 @@ public class OnlineMenuScreen implements Screen {
                         label.setText(ipAddressOfServer);
                         requestFromClient.text = "Connect";
                         client.send();
+                        labelMessage.setText("Connect");
                     } catch (Exception e) {
+                        labelMessage.setText("Error!");
                         isClient = false;
                         client = null;
                         ipAddressOfServer = "Server not found";
