@@ -81,7 +81,10 @@ public class EnemySystem extends EntitySystem implements EntityListener {
             cm.get(e).ghostObject.getWorldTransform(ghost);
             ghost.getTranslation(translation);
 
+
             mod.instance.transform.set(translation.x, translation.y, translation.z, rot.x, rot.y, rot.z, rot.w);
+            e.getComponent(CharacterComponent.class).ghostObject.setWorldTransform(mod.instance.transform);
+            mod.instance.transform.set(translation.x, translation.y - 2f, translation.z, rot.x, rot.y, rot.z, rot.w);
         }
     }
 

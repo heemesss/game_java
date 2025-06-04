@@ -15,7 +15,7 @@ import com.deeep.spaceglad.systems.RenderSystem;
 import com.deeep.spaceglad.systems.StatusSystem;
 
 public class GameWorld extends World{
-    private static final boolean debug = true;
+    private static final boolean debug = false;
     private DebugDrawer debugDrawer;
     private Entity character, gun;
     private RenderSystem renderSystem;
@@ -38,7 +38,7 @@ public class GameWorld extends World{
     }
 
     private void addEntities(){
-        engine.addEntity(EntityFactory.loadScene(0, 0, 0, "arena2"));
+        engine.addEntity(EntityFactory.loadScene(0, 0, 0, "arena_cub"));
         Entity dome = EntityFactory.loadDome(0, 0, 0);
 //        engine.addEntity(EntityFactory.loadDome(0, 0, 0));
         engine.addEntity(dome);

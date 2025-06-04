@@ -32,7 +32,7 @@ public class RenderSystem extends EntitySystem {
     public PerspectiveCamera camera, gunCamera;
     public Entity gun;
     private Vector3 position;
-    public ModelInstance enemy;
+    public Entity enemy;
 
     public RenderSystem(){
         camera = new PerspectiveCamera(FOV, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -62,8 +62,8 @@ public class RenderSystem extends EntitySystem {
     }
 
     public void update(float delta) {
-        drawShadows(delta);
-        drawModels();
+        drawShadows();
+        drawModels(delta);
 //        camera.rotate(camera.up, -Gdx.input.getDeltaX() * 0.5f);
 //        camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f);
 //        camera.update(true);
@@ -74,7 +74,7 @@ public class RenderSystem extends EntitySystem {
         return cam.frustum.pointInFrustum(instance.transform.getTranslation(position));
     }
 
-    private void drawShadows(float delta) {
+    private void drawShadows() {
         shadowLight.begin(Vector3.Zero, camera.direction);
         batch.begin(shadowLight.getCamera());
         for (int x = 0; x < entities.size(); x++) {
@@ -82,23 +82,26 @@ public class RenderSystem extends EntitySystem {
                 ModelComponent mod = entities.get(x).getComponent(ModelComponent.class);
                 if (isVisible(camera, mod.instance)) batch.render(mod.instance);
             }
-            if (entities.get(x).getComponent(AnimationComponent.class) != null && !Settings.Paused)
-                entities.get(x).getComponent(AnimationComponent.class).update(delta);
+
         }
         batch.end();
         shadowLight.end();
     }
 
-    private void drawModels() {
+    private void drawModels(float delta) {
         batch.begin(camera);
         for (int i = 0; i < entities.size(); i++) {
-            if (entities.get(i).getComponent(GunComponent.class) == null) {
+            if (entities.get(i).getComponent(GunComponent.class) == null && entities.get(i).getComponent(PlayerComponent.class) == null) {
                 ModelComponent mod = entities.get(i).getComponent(ModelComponent.class);
                 batch.render(mod.instance, environment);
+                if (entities.get(i).getComponent(AnimationComponent.class) != null && !Settings.Paused)
+                    entities.get(i).getComponent(AnimationComponent.class).update(delta);
             }
         }
-        if (enemy != null)
-            batch.render(enemy, environment);
+        if (enemy != null){
+            batch.render(enemy.getComponent(ModelComponent.class).instance, environment);
+            enemy.getComponent(AnimationComponent.class).update(delta);
+        }
         batch.end();
 
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);

@@ -25,6 +25,6 @@ public class StatusComponent implements Component {
     }
 
     private void playDeathAnim2() {
-        animationComponent.animate(EnemyAnimations.id, EnemyAnimations.offsetDeath2, EnemyAnimations.durationDeath2, 1, 3);
+        animationComponent.animate(EnemyAnimations.id/*, EnemyAnimations.offsetDeath2, EnemyAnimations.durationDeath2*/, 1, 3);
     }
 }

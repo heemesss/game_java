@@ -32,7 +32,7 @@ import java.util.Objects;
 import javax.security.auth.login.AccountLockedException;
 
 public class GameWorldOnline extends World {
-    private static final boolean debug = false;
+    private static final boolean debug = true;
     private DebugDrawer debugDrawer;
     private Entity character, gun, enemy;
     private RenderSystem renderSystem;
@@ -79,12 +79,14 @@ public class GameWorldOnline extends World {
             engine.addEntity(character = EntityFactory.createPlayer(bulletSystem, 44, 0, 44));
 
             engine.addEntity(enemy = EntityFactory.createPlayer(bulletSystem, -44, 0, -44));
+            renderSystem.enemy = enemy;
         }
         if (server != null){
             engine.addEntity(character = EntityFactory.createPlayer(bulletSystem, -44, 0, -44));
             setPositionCharacter(character);
 
             engine.addEntity(enemy = EntityFactory.createPlayer(bulletSystem, 44, 0, 44));
+            renderSystem.enemy = enemy;
         }
     }
 
@@ -106,7 +108,7 @@ public class GameWorldOnline extends World {
 
         if (client != null){
             Vector3 translation = new Vector3();
-            character.getComponent(ModelComponent.class).instance.transform.getTranslation(translation);
+            character.getComponent(CharacterComponent.class).ghostObject.getWorldTransform().getTranslation(translation);
             request.x = translation.x;
             request.y = translation.y;
             request.z = translation.z;
@@ -128,14 +130,15 @@ public class GameWorldOnline extends World {
 
             client.send();
 
+            // hitbox
+            enemy.getComponent(CharacterComponent.class).ghostObject.setWorldTransform(new Matrix4(new Vector3(client.getResponse().x,
+                client.getResponse().y, client.getResponse().z), new Quaternion(), new Vector3(1, 1, 1)));
             //position
-            enemy.getComponent(ModelComponent.class).instance.transform.set(client.getResponse().x,
-                client.getResponse().y, client.getResponse().z, 0, 0, 0, 0);
+            enemy.getComponent(ModelComponent.class).instance.transform.set(new Matrix4(new Vector3(client.getResponse().x,
+                client.getResponse().y - 2, client.getResponse().z), new Quaternion(), new Vector3(1, 1, 1)));
             // rotate
 //            enemy.getComponent(ModelComponent.class).instance.transform.setToRotation(0, 1, 0,
 //                0);
-            // hitbox
-            enemy.getComponent(CharacterComponent.class).ghostObject.setWorldTransform(enemy.getComponent(ModelComponent.class).instance.transform);
             if (Objects.equals(client.getResponse().text, "DIE")){
                 setPositionCharacter(character);
                 gameUI.scoreWidget.enemy += 1;
@@ -144,7 +147,7 @@ public class GameWorldOnline extends World {
         }
         else if (server != null){
             Vector3 translation = new Vector3();
-            character.getComponent(ModelComponent.class).instance.transform.getTranslation(translation);
+            character.getComponent(CharacterComponent.class).ghostObject.getWorldTransform().getTranslation(translation);
             response.x = translation.x;
             response.y = translation.y;
             response.z = translation.z;
@@ -162,14 +165,15 @@ public class GameWorldOnline extends World {
             } else {
                 response.text = "";
             }
+            // hitbox
+            enemy.getComponent(CharacterComponent.class).ghostObject.setWorldTransform(new Matrix4(new Vector3(server.getRequest().x,
+                server.getRequest().y, server.getRequest().z), new Quaternion(), new Vector3(1, 1, 1)));
             // position
-            enemy.getComponent(ModelComponent.class).instance.transform.set(server.getRequest().x,
-                server.getRequest().y, server.getRequest().z,  0, 0, 0, 0);
+            enemy.getComponent(ModelComponent.class).instance.transform.set(new Matrix4(new Vector3(server.getRequest().x,
+                server.getRequest().y - 2, server.getRequest().z), new Quaternion(), new Vector3(1, 1, 1)));
             // rotate
 //            enemy.getComponent(ModelComponent.class).instance.transform.setToRotation(new Vector3(0, 1, 0),
 //                0);
-            // hitbox
-            enemy.getComponent(CharacterComponent.class).ghostObject.setWorldTransform(enemy.getComponent(ModelComponent.class).instance.transform);
             if (Objects.equals(server.getRequest().text, "DIE")){
                 setPositionCharacter(character);
                 gameUI.scoreWidget.enemy += 1;
