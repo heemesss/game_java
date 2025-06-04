@@ -98,27 +98,13 @@ public class GameWorldOnline extends World {
     }
 
     public void render(float delta) {
-        engine.update(delta);
-        if (debug) {
-            debugDrawer.begin(renderSystem.camera);
-            bulletSystem.collisionWorld.debugDrawWorld();
-            debugDrawer.end();
-        }
-        checkPause();
-
         if (client != null){
             Vector3 translation = new Vector3();
             character.getComponent(CharacterComponent.class).ghostObject.getWorldTransform().getTranslation(translation);
             request.x = translation.x;
             request.y = translation.y;
             request.z = translation.z;
-            Quaternion quat = new Quaternion().setFromAxis(0, 1, 0, (float) Math.toDegrees(renderSystem.camera.direction.x));
-
-            request.qx = quat.x;
-            request.qy = quat.y;
-            request.qz = quat.z;
-            request.qw = quat.w;
-            request.rotate = renderSystem.camera.direction.x;
+            request.rotate = playerSystem.getX;
 
             if (enemy.getComponent(PlayerComponent.class).health <= 0){
                 request.text = "DIE";
@@ -137,8 +123,7 @@ public class GameWorldOnline extends World {
             enemy.getComponent(ModelComponent.class).instance.transform.set(new Matrix4(new Vector3(client.getResponse().x,
                 client.getResponse().y - 2, client.getResponse().z), new Quaternion(), new Vector3(1, 1, 1)));
             // rotate
-//            enemy.getComponent(ModelComponent.class).instance.transform.setToRotation(0, 1, 0,
-//                0);
+            enemy.getComponent(ModelComponent.class).instance.transform.rotate(0, 1, 0, -client.getResponse().rotate - 90);
             if (Objects.equals(client.getResponse().text, "DIE")){
                 setPositionCharacter(character);
                 gameUI.scoreWidget.enemy += 1;
@@ -151,12 +136,7 @@ public class GameWorldOnline extends World {
             response.x = translation.x;
             response.y = translation.y;
             response.z = translation.z;
-            Quaternion quat = new Quaternion().setFromAxis(0, 1, 0, (float) Math.toDegrees(renderSystem.camera.direction.x));
-            response.qx = quat.x;
-            response.qy = quat.y;
-            response.qz = quat.z;
-            response.qw = quat.w;
-            response.rotate = renderSystem.camera.direction.x;
+            response.rotate = playerSystem.getX;
 
             if (enemy.getComponent(PlayerComponent.class).health <= 0){
                 response.text = "DIE";
@@ -172,13 +152,20 @@ public class GameWorldOnline extends World {
             enemy.getComponent(ModelComponent.class).instance.transform.set(new Matrix4(new Vector3(server.getRequest().x,
                 server.getRequest().y - 2, server.getRequest().z), new Quaternion(), new Vector3(1, 1, 1)));
             // rotate
-//            enemy.getComponent(ModelComponent.class).instance.transform.setToRotation(new Vector3(0, 1, 0),
-//                0);
+            enemy.getComponent(ModelComponent.class).instance.transform.rotate(0, 1, 0, -server.getRequest().rotate - 90);
             if (Objects.equals(server.getRequest().text, "DIE")){
                 setPositionCharacter(character);
                 gameUI.scoreWidget.enemy += 1;
             }
         }
+
+        engine.update(delta);
+        if (debug) {
+            debugDrawer.begin(renderSystem.camera);
+            bulletSystem.collisionWorld.debugDrawWorld();
+            debugDrawer.end();
+        }
+        checkPause();
     }
 
     private void checkPause() {

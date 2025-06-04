@@ -46,6 +46,7 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     Vector3 rayFrom = new Vector3();
     Vector3 rayTo = new Vector3();
     private World gameWorld;
+    public float getX = 0;
 
     private TextButton fireButton;
 
@@ -87,12 +88,14 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
                 if (Gdx.input.getX(i) > Gdx.graphics.getWidth() / 2) {
 //                    System.out.println(Gdx.input.getX(i));
                     camera.rotate(camera.up, -Gdx.input.getDeltaX(i) * 0.25f);
+                    getX += -Gdx.input.getDeltaX(i) * 0.25f;
                     camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY(i) * 0.25f);
                     break;
                 }
             }
         } else {
             camera.rotate(camera.up, -Gdx.input.getDeltaX() * 0.5f);
+            getX += -Gdx.input.getDeltaX() * 0.5f;
             camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f);
         }
 
