@@ -12,8 +12,8 @@ public class DeathWidget extends Actor {
     private float time;
 
     public DeathWidget() {
-        kill = new Image(new Texture("Models/ground.png"));
-        death = new Image(new Texture("Models/badlogic.jpg"));
+        kill = new Image(new Texture("data/kill.png"));
+        death = new Image(new Texture("data/death.png"));
     }
 
     public void setDis(){
@@ -22,7 +22,7 @@ public class DeathWidget extends Actor {
     }
 
     public void setKill(){
-        time = 1;
+        time = 0.5f;
         kill.setPosition(Gdx.graphics.getWidth() / 2f - kill.getWidth() / 2f, Gdx.graphics.getHeight() / 2f - kill.getHeight() / 2f);
     }
 
@@ -34,7 +34,7 @@ public class DeathWidget extends Actor {
     @Override
     public void setSize(float width, float height) {
         super.setSize(width, height);
-        kill.setSize(width, height);
+        kill.setSize(width * 2, height * 2);
         death.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         setDis();
     }

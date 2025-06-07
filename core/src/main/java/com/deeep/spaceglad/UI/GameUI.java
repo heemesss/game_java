@@ -35,7 +35,7 @@ public class GameUI {
     public void setWidgets() {
         healthWidget = new HealthWidget();
         scoreWidget = new ScoreWidget();
-        pauseWidget = new PauseWidget(game, stage);
+        pauseWidget = new PauseWidget(game, stage, isOnline);
         gameOverWidget = new GameOverWidget(game, stage);
         crosshairWidget = new CrosshairWidget();
         fpsLabel = new Label("", Assets.skin);

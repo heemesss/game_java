@@ -22,9 +22,12 @@ public class PauseWidget extends Actor {
     private TextButton closeDialog, restartButton, quitButton, pauseButton;
     private Stage stage;
 
-    public PauseWidget(Core game, Stage stage) {
+    private boolean isOnline;
+
+    public PauseWidget(Core game, Stage stage, boolean isOnline) {
         this.game = game;
         this.stage = stage;
+        this.isOnline = isOnline;
         setWidgets();
         configureWidgets();
         setListeners();
@@ -33,7 +36,8 @@ public class PauseWidget extends Actor {
     private void setWidgets() {
         window = new Window("Pause", Assets.skin);
         closeDialog = new TextButton("X", Assets.skin);
-        restartButton = new TextButton("Restart", Assets.skin);
+        if (!isOnline)
+            restartButton = new TextButton("Restart", Assets.skin);
         quitButton = new TextButton("Quit", Assets.skin);
 
         if (Gdx.app.getType() == Application.ApplicationType.Android)
@@ -42,7 +46,8 @@ public class PauseWidget extends Actor {
 
     private void configureWidgets() {
         window.getTitleTable().add(closeDialog).height(window.getPadTop());
-        window.add(restartButton);
+        if (!isOnline)
+            window.add(restartButton);
         window.add(quitButton);
         if (Gdx.app.getType() == Application.ApplicationType.Android)
             stage.addActor(pauseButton);
@@ -65,12 +70,13 @@ public class PauseWidget extends Actor {
                 handleUpdates();
             }
         });
-        restartButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent inputEvent, float x, float y) {
-                game.setScreen(new GameScreen(game));
-            }
-        });
+        if (!isOnline)
+            restartButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent inputEvent, float x, float y) {
+                    game.setScreen(new GameScreen(game));
+                }
+            });
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent inputEvent, float x, float y) {
@@ -113,9 +119,10 @@ public class PauseWidget extends Actor {
     @Override
     public void setSize(float width, float height) {
         super.setSize(width, height);
-        restartButton.setWidth(restartButton.getWidth() * 2);
+        if (!isOnline)
+            restartButton.setWidth(restartButton.getWidth() * 2);
         quitButton.setWidth(quitButton.getWidth() * 2);
-        window.setSize(restartButton.getWidth() + quitButton.getWidth(), height * 4);
+        window.setSize(quitButton.getWidth() + quitButton.getWidth(), height * 4);
         if (Gdx.app.getType() == Application.ApplicationType.Android)
             pauseButton.setSize(pauseButton.getWidth(), pauseButton.getHeight() * 2);
     }

@@ -21,6 +21,7 @@ import com.deeep.spaceglad.components.CharacterComponent;
 import com.deeep.spaceglad.components.ModelComponent;
 import com.deeep.spaceglad.components.PlayerComponent;
 import com.deeep.spaceglad.managers.EntityFactory;
+import com.deeep.spaceglad.screens.MainMenuScreen;
 import com.deeep.spaceglad.systems.BulletSystem;
 import com.deeep.spaceglad.systems.EnemySystem;
 import com.deeep.spaceglad.systems.PlayerSystem;
@@ -32,7 +33,7 @@ import java.util.Objects;
 import javax.security.auth.login.AccountLockedException;
 
 public class GameWorldOnline extends World {
-    private static final boolean debug = true;
+    private static final boolean debug = false;
     private DebugDrawer debugDrawer;
     private Entity character, gun, enemy;
     private RenderSystem renderSystem;
@@ -98,6 +99,13 @@ public class GameWorldOnline extends World {
     }
 
     public void render(float delta) {
+        engine.update(delta);
+        if (debug) {
+            debugDrawer.begin(renderSystem.camera);
+            bulletSystem.collisionWorld.debugDrawWorld();
+            debugDrawer.end();
+        }
+        checkPause();
         if (client != null){
             Vector3 translation = new Vector3();
             character.getComponent(CharacterComponent.class).ghostObject.getWorldTransform().getTranslation(translation);
@@ -132,6 +140,10 @@ public class GameWorldOnline extends World {
                 gameUI.deathWidget.setDeath();
             }
 
+
+            if (Objects.equals(client.getResponse().text, "EXIT")){
+                Gdx.app.exit();
+            }
         }
         else if (server != null){
             Vector3 translation = new Vector3();
@@ -163,15 +175,12 @@ public class GameWorldOnline extends World {
                 response.text = "DEATH";
                 gameUI.deathWidget.setDeath();
             }
+
+            if (Objects.equals(server.getRequest().text, "EXIT")) {
+                Gdx.app.exit();
+            }
         }
 
-        engine.update(delta);
-        if (debug) {
-            debugDrawer.begin(renderSystem.camera);
-            bulletSystem.collisionWorld.debugDrawWorld();
-            debugDrawer.end();
-        }
-        checkPause();
     }
 
     private void checkPause() {
@@ -207,9 +216,19 @@ public class GameWorldOnline extends World {
         bulletSystem = null;
         renderSystem.dispose();
 
+        if (server != null){
+            response.text = "EXIT";
+        }
+
+        if (client != null){
+            request.text = "EXIT";
+            client.send();
+        }
+
         character.getComponent(CharacterComponent.class).characterController.dispose();
         character.getComponent(CharacterComponent.class).ghostObject.dispose();
         character.getComponent(CharacterComponent.class).ghostShape.dispose();
 //        EntityFactory.dispose();
+        Gdx.app.exit();
     }
 }

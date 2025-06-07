@@ -26,7 +26,7 @@ import java.util.Objects;
 public class OnlineMenuScreen implements Screen {
     private Core game;
     private Stage stage;
-    private TextButton hostButton, clientButton, startButton;
+    private TextButton hostButton, clientButton, startButton, backButton;
     private Label label, labelMessage;
     private Image background;
 
@@ -61,6 +61,7 @@ public class OnlineMenuScreen implements Screen {
         hostButton = new TextButton("Create", Assets.skin);
         clientButton = new TextButton("Join", Assets.skin);
         startButton = new TextButton("Start", Assets.skin);
+        backButton = new TextButton("Back", Assets.skin);
         label = new Label(ipAddressOfServer, Assets.skin);
         labelMessage = new Label("Create or Join", Assets.skin);
     }
@@ -71,7 +72,9 @@ public class OnlineMenuScreen implements Screen {
         clientButton.setSize(256, 128);
         clientButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - clientButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - clientButton.getHeight() / 2);
         startButton.setSize(256, 128);
-        startButton.setPosition(Gdx.graphics.getWidth() / 4f - startButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + startButton.getHeight());
+        startButton.setPosition(Gdx.graphics.getWidth() / 4f - startButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - startButton.getHeight());
+        backButton.setSize(256, 128);
+        backButton.setPosition(0, Gdx.graphics.getHeight() - backButton.getHeight());
         startButton.setDisabled(false);
         startButton.setVisible(false);
 
@@ -87,6 +90,7 @@ public class OnlineMenuScreen implements Screen {
         stage.addActor(label);
         stage.addActor(startButton);
         stage.addActor(labelMessage);
+        stage.addActor(backButton);
     }
 
     private void setListeners() {
@@ -132,6 +136,13 @@ public class OnlineMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 responseFromServer.text = "Start";
                 game.setScreen(new OnlineGameScreen(game, server, client, requestFromClient, responseFromServer));
+            }
+        });
+
+        backButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MainMenuScreen(game));
             }
         });
     }
