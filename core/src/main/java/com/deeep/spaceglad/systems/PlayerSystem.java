@@ -109,18 +109,19 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
         walk.y = 0;
         walk.setLength(camera.direction.len());
         if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            tmp.set(walk).scl(ControllerWidget.getMovementVector().y * 2);
+            tmp.set(walk).scl(ControllerWidget.getMovementVector().y * delta * 60);
             characterComponent.walkDirection.add(tmp);
 
-            tmp.set(walk).crs(camera.up).scl(ControllerWidget.getMovementVector().x * 2);
+            tmp.set(walk).crs(camera.up).scl(ControllerWidget.getMovementVector().x * delta * 60);
             characterComponent.walkDirection.add(tmp);
         } else {
 
             if (Gdx.input.isKeyPressed(Input.Keys.W)) characterComponent.walkDirection.add(walk);
             if (Gdx.input.isKeyPressed(Input.Keys.S)) characterComponent.walkDirection.sub(walk);
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) tmp.set(walk).crs(camera.up).scl(-1);
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) tmp.set(walk).crs(camera.up);
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) tmp.set(walk).crs(camera.up).scl(-1 * delta * 60);
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) tmp.set(walk).crs(camera.up).scl(delta * 60);
             characterComponent.walkDirection.add(tmp);
+            characterComponent.walkDirection.scl(delta * 60);
         }
         characterComponent.walkDirection.scl(20 * delta);
         characterComponent.characterController.setWalkDirection(characterComponent.walkDirection);

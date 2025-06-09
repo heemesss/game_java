@@ -34,7 +34,7 @@ public class DeathWidget extends Actor {
     @Override
     public void setSize(float width, float height) {
         super.setSize(width, height);
-        kill.setSize(width * 2, height * 2);
+        kill.setSize(width * 4, height * 4);
         death.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         setDis();
     }

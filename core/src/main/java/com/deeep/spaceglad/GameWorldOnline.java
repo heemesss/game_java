@@ -113,15 +113,23 @@ public class GameWorldOnline extends World {
             request.y = translation.y;
             request.z = translation.z;
             request.rotate = playerSystem.getX;
-
-            if (enemy.getComponent(PlayerComponent.class).health <= 0 && !Objects.equals(request.text, "DIE")){
+            // hit
+            if (enemy.getComponent(PlayerComponent.class).health <= 0){
                 request.text = "DIE";
                 enemy.getComponent(PlayerComponent.class).health = 100;
-                gameUI.scoreWidget.player += 1;
+            }
+            else if (Objects.equals(client.getResponse().text, "DIE") && !Objects.equals(request.text, "DEATH")){
+                setPositionCharacter(character);
+                request.score += 1;
+                request.text = "DEATH";
+                gameUI.deathWidget.setDeath();
+            }
+            else if (Objects.equals(client.getResponse().text, "DEATH")) {
                 gameUI.deathWidget.setKill();
-            } else if (Objects.equals(request.text, "DEATH")) {
                 request.text = "";
             }
+            else if (Objects.equals(client.getResponse().text, ""))
+                request.text = "";
 
             client.send();
 
@@ -132,14 +140,9 @@ public class GameWorldOnline extends World {
             enemy.getComponent(ModelComponent.class).instance.transform.set(new Matrix4(new Vector3(client.getResponse().x,
                 client.getResponse().y - 2, client.getResponse().z), new Quaternion(), new Vector3(1, 1, 1)));
             // rotate
-            enemy.getComponent(ModelComponent.class).instance.transform.rotate(0, 1, 0, -client.getResponse().rotate - 90);
-            if (Objects.equals(client.getResponse().text, "DIE") && !Objects.equals(request.text, "DEATH")){
-                setPositionCharacter(character);
-                gameUI.scoreWidget.enemy += 1;
-                request.text = "DEATH";
-                gameUI.deathWidget.setDeath();
-            }
-
+            enemy.getComponent(ModelComponent.class).instance.transform.rotate(0, 1, 0, client.getResponse().rotate - 90);
+            gameUI.scoreWidget.enemy = request.score;
+            gameUI.scoreWidget.player = client.getResponse().score;
 
             if (Objects.equals(client.getResponse().text, "EXIT")){
                 Gdx.app.exit();
@@ -153,14 +156,23 @@ public class GameWorldOnline extends World {
             response.z = translation.z;
             response.rotate = playerSystem.getX;
 
-            if (enemy.getComponent(PlayerComponent.class).health <= 0 && !Objects.equals(response.text, "DIE")){
+            // hit
+            if (enemy.getComponent(PlayerComponent.class).health <= 0){
                 response.text = "DIE";
                 enemy.getComponent(PlayerComponent.class).health = 100;
-                gameUI.scoreWidget.player += 1;
+            }
+            else if (Objects.equals(server.getRequest().text, "DIE") && !Objects.equals(response.text, "DEATH")){
+                setPositionCharacter(character);
+                response.score += 1;
+                response.text = "DEATH";
+                gameUI.deathWidget.setDeath();
+            }
+            else if (Objects.equals(server.getRequest().text, "DEATH")) {
                 gameUI.deathWidget.setKill();
-            } else if (Objects.equals(response.text, "DIE")) {
                 response.text = "";
             }
+            else if (Objects.equals(server.getRequest().text, ""))
+                response.text = "";
             // hitbox
             enemy.getComponent(CharacterComponent.class).ghostObject.setWorldTransform(new Matrix4(new Vector3(server.getRequest().x,
                 server.getRequest().y, server.getRequest().z), new Quaternion(), new Vector3(1, 1, 1)));
@@ -168,13 +180,10 @@ public class GameWorldOnline extends World {
             enemy.getComponent(ModelComponent.class).instance.transform.set(new Matrix4(new Vector3(server.getRequest().x,
                 server.getRequest().y - 2, server.getRequest().z), new Quaternion(), new Vector3(1, 1, 1)));
             // rotate
-            enemy.getComponent(ModelComponent.class).instance.transform.rotate(0, 1, 0, -server.getRequest().rotate - 90);
-            if (Objects.equals(server.getRequest().text, "DIE") && !Objects.equals(response.text, "DEATH")){
-                setPositionCharacter(character);
-                gameUI.scoreWidget.enemy += 1;
-                response.text = "DEATH";
-                gameUI.deathWidget.setDeath();
-            }
+            enemy.getComponent(ModelComponent.class).instance.transform.rotate(0, 1, 0, server.getRequest().rotate - 90);
+
+            gameUI.scoreWidget.enemy = response.score;
+            gameUI.scoreWidget.player = server.getRequest().score;
 
             if (Objects.equals(server.getRequest().text, "EXIT")) {
                 Gdx.app.exit();

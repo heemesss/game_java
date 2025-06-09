@@ -60,7 +60,7 @@ public class EntityFactory {
         Entity entity = new Entity();
         ModelLoader<?> modelLoader = new G3dModelLoader(new JsonReader());
         if (playerModel == null) {
-            playerModelData = modelLoader.loadModelData(Gdx.files.internal("Models/run3.g3dj"));
+            playerModelData = modelLoader.loadModelData(Gdx.files.internal("Models/run3color.g3dj"));
             playerModel = new Model(playerModelData, new TextureProvider.FileTextureProvider());
             for (Node node : playerModel.nodes) {
                 node.scale.scl(0.006f);
@@ -107,7 +107,7 @@ public class EntityFactory {
         Entity entity = new Entity();
         ModelLoader<?> modelLoader = new G3dModelLoader(new JsonReader());
         if (enemyModel == null) {
-            enemyModelData = modelLoader.loadModelData(Gdx.files.internal("Models/run3.g3dj"));
+            enemyModelData = modelLoader.loadModelData(Gdx.files.internal("Models/run3color.g3dj"));
 //            enemyModelData = modelLoader.loadModelData(Gdx.files.internal("Models/monster.g3dj"));
             enemyModel = new Model(enemyModelData, new TextureProvider.FileTextureProvider());
             for (Node node : enemyModel.nodes) {

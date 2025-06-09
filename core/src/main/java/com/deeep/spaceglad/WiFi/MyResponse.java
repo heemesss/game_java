@@ -9,5 +9,6 @@ import com.deeep.spaceglad.components.ModelComponent;
  */
 public class MyResponse {
     public String text = "";
-    public float x, y, z, qx, qy, qz, qw, rotate;
+    public float x, y, z, rotate;
+    public int score = 0;
 }
