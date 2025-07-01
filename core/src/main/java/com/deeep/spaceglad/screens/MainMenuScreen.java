@@ -16,7 +16,7 @@ public class MainMenuScreen implements Screen {
     Core game;
     Stage stage;
     Image backgroundImage, titleImage;
-    TextButton playButton, quitButton, leaderboardsButton, onlineGameButton;
+    TextButton playButton, quitButton, leaderboardsButton, onlineGameButton, settingsButton;
 
     public MainMenuScreen(Core game) {
         this.game = game;
@@ -35,6 +35,7 @@ public class MainMenuScreen implements Screen {
         leaderboardsButton = new TextButton("Leaders", Assets.skin);
         onlineGameButton = new TextButton("Online", Assets.skin);
         quitButton = new TextButton("Quit", Assets.skin);
+        settingsButton = new TextButton("Setting", Assets.skin);
     }
 
     private void configureWidgers() {
@@ -46,11 +47,13 @@ public class MainMenuScreen implements Screen {
         quitButton.setSize(256, 128);
         leaderboardsButton.setSize(256, 128);
         onlineGameButton.setSize(256, 128);
+        settingsButton.setSize(256, 128);
 
         playButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + playButton.getHeight() * 1.75f);
         onlineGameButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + onlineGameButton.getHeight() * 0.25f);
         leaderboardsButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - leaderboardsButton.getHeight() * 1.25f);
         quitButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f - quitButton.getHeight() * 2.75f);
+        settingsButton.setPosition(0, Gdx.graphics.getHeight() - settingsButton.getHeight());
 
         stage.addActor(backgroundImage);
         stage.addActor(titleImage);
@@ -58,6 +61,7 @@ public class MainMenuScreen implements Screen {
         stage.addActor(onlineGameButton);
         stage.addActor(quitButton);
         stage.addActor(leaderboardsButton);
+        stage.addActor(settingsButton);
     }
 
     private void setListeners() {
@@ -86,6 +90,13 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new OnlineMenuScreen(game));
+            }
+        });
+
+        settingsButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new SettingsScreen(game));
             }
         });
     }

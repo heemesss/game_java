@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.deeep.spaceglad.managers.SensWidget;
 import com.deeep.spaceglad.screens.MainMenuScreen;
 
 public class Core extends ApplicationAdapter {
@@ -14,6 +15,7 @@ public class Core extends ApplicationAdapter {
     @Override
     public void create() {
         new Assets();
+        new SensWidget();
         Settings.load();
         Gdx.input.setCatchBackKey(true);
         setScreen(new MainMenuScreen(this));

@@ -38,15 +38,15 @@ public class GameWorld extends World{
     }
 
     private void addEntities(){
-        engine.addEntity(EntityFactory.loadScene(0, 0, 0, "arena_cub"));
+        engine.addEntity(EntityFactory.loadScene(0, 0, 0, "labirint2"));
         Entity dome = EntityFactory.loadDome(0, 0, 0);
 //        engine.addEntity(EntityFactory.loadDome(0, 0, 0));
         engine.addEntity(dome);
-        engine.addEntity(gun = EntityFactory.loadGun(2.5f, -1.9f, -4));
+        engine.addEntity(gun = EntityFactory.loadGun(1.5f, -1.9f, -4));
         playerSystem.dome = dome;
 //        playerSystem.gun = gun;
         renderSystem.gun = gun;
-        character = EntityFactory.createPlayer(bulletSystem, 30, 0, 30);
+        character = EntityFactory.createPlayer(bulletSystem, 0, -44, 0);
         engine.addEntity(character);
 
         // need character

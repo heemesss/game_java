@@ -176,7 +176,7 @@ public class EntityFactory {
         ModelData modelData = modelLoader.loadModelData(Gdx.files.internal("Models/gun.g3dj"));
         Model model = new Model(modelData, new TextureProvider.FileTextureProvider());
         ModelComponent modelComponent = new ModelComponent(model, x, y, z);
-        modelComponent.instance.transform.rotate(0, -0.1f, 0, 90);
+        modelComponent.instance.transform.rotate(0, -0.1f, 0, 85);
         Entity gunEntity = new Entity();
         gunEntity.add(modelComponent);
         gunEntity.add(new GunComponent());

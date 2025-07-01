@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.deeep.spaceglad.GameWorld;
+import com.deeep.spaceglad.GameWorldOnline;
 import com.deeep.spaceglad.World;
 import com.deeep.spaceglad.components.*;
 import com.deeep.spaceglad.managers.EntityFactory;
@@ -28,8 +29,8 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     private float speed = 10f;
     private int count = 3;
 
-    private int[] xSpawn = {-30, 0, 0, 30};
-    private int[] ySpawn = {0, 30, -30, 0};
+    private int[] xSpawn = {-52, 52, -52, 52};
+    private int[] ySpawn = {52, -52, -52, 52};
 
     ComponentMapper<CharacterComponent> cm = ComponentMapper.getFor(CharacterComponent.class);
     ComponentMapper<StatusComponent> sm = ComponentMapper.getFor(StatusComponent.class);
@@ -47,7 +48,7 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     }
 
     public void update(float delta) {
-        speed += delta / 5;
+        speed += delta;
         count = (int)speed / 5 + 1;
         if (entities.size() < count) {
             spawnEnemy();
@@ -90,7 +91,7 @@ public class EnemySystem extends EntitySystem implements EntityListener {
 
     private void spawnEnemy() {
         int i = MathUtils.random(3);
-        engine.addEntity(EntityFactory.createEnemy(gameWorld.bulletSystem, xSpawn[i], -7, ySpawn[i]));
+        engine.addEntity(EntityFactory.createEnemy(gameWorld.bulletSystem, xSpawn[i], -47, ySpawn[i]));
     }
 
     @Override

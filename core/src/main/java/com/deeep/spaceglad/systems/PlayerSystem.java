@@ -29,6 +29,7 @@ import com.deeep.spaceglad.components.ModelComponent;
 import com.deeep.spaceglad.components.PlayerComponent;
 import com.deeep.spaceglad.components.StatusComponent;
 import com.deeep.spaceglad.managers.ControllerWidget;
+import com.deeep.spaceglad.managers.SensWidget;
 import com.deeep.spaceglad.screens.GameScreen;
 
 import java.util.Arrays;
@@ -47,6 +48,8 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
     Vector3 rayTo = new Vector3();
     private World gameWorld;
     public float getX = 0;
+
+    private float accY = Gdx.input.getAccelerometerY(), accZ = Gdx.input.getAccelerometerZ();
 
     private TextButton fireButton;
 
@@ -70,8 +73,6 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
                 fireButton.getHeight());
             gameUI.stage.addActor(fireButton);
         }
-//        characterComponent.characterController.setJumpSpeed(10);
-//        characterComponent.characterController.setFallSpeed(10);
     }
 
     @Override
@@ -80,23 +81,33 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
         updateMovement(deltaTime);
         updateStatus();
         checkGameOver();
+
+        System.out.println(Arrays.toString(modelComponent.instance.transform.getValues()));
     }
 
     private void updateMovement(float delta) {
         if (Gdx.app.getType() == Application.ApplicationType.Android) {
             for (int i = 0; Gdx.input.isTouched(i); i++){
-                if (Gdx.input.getX(i) > Gdx.graphics.getWidth() / 2) {
-//                    System.out.println(Gdx.input.getX(i));
-                    camera.rotate(camera.up, -Gdx.input.getDeltaX(i) * 0.25f);
-                    getX += -Gdx.input.getDeltaX(i) * 0.25f;
-                    camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY(i) * 0.25f);
-                    break;
+                if (SensWidget.mode){
+                    if (Gdx.input.getX(i) > Gdx.graphics.getWidth() / 2) {
+                        camera.rotate(camera.up, -Gdx.input.getDeltaX(i) * 0.25f * SensWidget.sens);
+                        getX += -Gdx.input.getDeltaX(i) * 0.25f * SensWidget.sens;
+                        camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY(i) * 0.25f * SensWidget.sens);
+                        break;
+                    }
                 }
             }
+            if (!SensWidget.mode) {
+                camera.rotate(camera.up, SensWidget.sens * (Gdx.input.getAccelerometerY() - accY));
+                camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -(Gdx.input.getAccelerometerZ() - accZ) * 0.25f * SensWidget.sens);
+
+//                accY = Gdx.input.getAccelerometerY();
+//                accZ = Gdx.input.getAccelerometerZ();
+            }
         } else {
-            camera.rotate(camera.up, -Gdx.input.getDeltaX() * 0.5f);
-            getX += -Gdx.input.getDeltaX() * 0.5f;
-            camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f);
+            camera.rotate(camera.up, -Gdx.input.getDeltaX() * 0.5f * SensWidget.sens);
+            getX += -Gdx.input.getDeltaX() * 0.5f * SensWidget.sens;
+            camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f * SensWidget.sens);
         }
 
         // Zero
@@ -181,11 +192,11 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
             }
             if (((Entity) obj.userData).getComponent(PlayerComponent.class) != null &&
                 ((Entity) obj.userData).getComponent(CharacterComponent.class) != characterComponent) {
-                System.out.println("GJGFKGFJGFJKD");
                 ((Entity) obj.userData).getComponent(PlayerComponent.class).health = 0;
                 gameUI.deathWidget.setKill();
             }
         }
+        gameUI.fireWidget.time = 10;
         Assets.soundGun.play(0.1f);
 //        gun.getComponent(AnimationComponent.class).animate("Armature|shoot", 1, 3);
     }
