@@ -26,8 +26,8 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     private Matrix4 ghost = new Matrix4();
     private Vector3 translation = new Vector3();
 
-    private float speed = 10f;
     private int count = 3;
+    private float time = 0;
 
     private int[] xSpawn = {-52, 52, -52, 52};
     private int[] ySpawn = {52, -52, -52, 52};
@@ -48,8 +48,11 @@ public class EnemySystem extends EntitySystem implements EntityListener {
     }
 
     public void update(float delta) {
-        speed += delta;
-        count = (int)speed / 5 + 1;
+        time += delta;
+        if (time > 10){
+            count++;
+            time = 0;
+        }
         if (entities.size() < count) {
             spawnEnemy();
         }
@@ -73,7 +76,7 @@ public class EnemySystem extends EntitySystem implements EntityListener {
             cm.get(e).characterDirection.set(-1, 0, 0).rot(mod.instance.transform);
             cm.get(e).walkDirection.set(0, 0, 0);
             cm.get(e).walkDirection.add(cm.get(e).characterDirection);
-            cm.get(e).walkDirection.scl(speed * delta);
+            cm.get(e).walkDirection.scl(delta * 10);
             cm.get(e).characterController.setWalkDirection(cm.get(e).walkDirection);
 //            cm.get(e).characterController.setGravity(new Vector3(0, -10, 0));
 

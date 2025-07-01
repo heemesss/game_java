@@ -14,10 +14,10 @@ public class ControllerWidget {
 
     public ControllerWidget() {
         Touchpad.TouchpadStyle touchpadStyle = new Touchpad.TouchpadStyle();
-        touchpadStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("data/touchKnob.png"))));
+        touchpadStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("data/SmallHandleFilled.png"))));
         touchpadStyle.knob.setMinWidth(64);
         touchpadStyle.knob.setMinHeight(64);
-        touchpadStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("data/touchBackground.png"))));
+        touchpadStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("data/Joystick.png"))));
         touchpadStyle.background.setMinWidth(64);
         touchpadStyle.background.setMinHeight(64);
 

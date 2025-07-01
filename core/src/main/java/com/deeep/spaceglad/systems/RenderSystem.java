@@ -62,7 +62,7 @@ public class RenderSystem extends EntitySystem {
     }
 
     public void update(float delta) {
-        drawShadows();
+//        drawShadows();
         drawModels(delta);
 //        camera.rotate(camera.up, -Gdx.input.getDeltaX() * 0.5f);
 //        camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f);

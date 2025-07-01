@@ -26,6 +26,7 @@ public class GameWorld extends World{
         setDebug();
         addSystems(gameUI);
         addEntities();
+        this.gameUI = gameUI;
     }
 
     private void addSystems(GameUI gameUI) {

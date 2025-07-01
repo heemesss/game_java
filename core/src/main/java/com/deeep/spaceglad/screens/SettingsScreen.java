@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
@@ -27,10 +28,10 @@ public class SettingsScreen implements Screen {
     Core game;
     Stage stage;
     Image backgroundImage;
-    Label sens, control;
-    SelectBox<String> selectBox, selectColor;
+    Label sens, control, view;
+    SelectBox<String> selectBox, selectColor, selectControl;
     SelectBox<Float> selectSens;
-    TextButton backButton;
+    ImageTextButton backButton;
 
     public SettingsScreen(Core game){
         this.game = game;
@@ -44,10 +45,12 @@ public class SettingsScreen implements Screen {
     private void setWidgets(){
         backgroundImage = new Image(new Texture(Gdx.files.internal("data/backgroundMN.png")));
         sens = new Label("sensitive", Assets.skin);
-        control = new Label("control mode", Assets.skin);
+        control = new Label("mode control", Assets.skin);
+        view = new Label("view control", Assets.skin);
         selectBox = new SelectBox<>(Assets.skin);
         selectSens = new SelectBox<>(Assets.skin);
         selectColor = new SelectBox<>(Assets.skin);
+        selectControl = new SelectBox<>(Assets.skin);
         selectSens.setItems(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f,
             1.1f, 1.2f, 1.3f, 1.4f, 1.5f, 1.6f, 1.7f, 1.8f, 1.9f, 2.0f);
         selectSens.setSelected(SensWidget.sens);
@@ -61,22 +64,29 @@ public class SettingsScreen implements Screen {
         selectColor.setItems("blue", "pink", "red");
         selectColor.setSelected(SensWidget.color);
         selectBox.setSelected(SensWidget.mode ? "normal" : "accelerometer");
-        backButton = new TextButton("Back", Assets.skin);
+        backButton = new ImageTextButton("Back", Assets.style);
+
+        selectControl.setItems("block y", "base");
+        selectControl.setSelected(SensWidget.control);
     }
 
     private void configureWidgets(){
         backgroundImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        sens.setPosition(800 - sens.getWidth(), 510); // text
+        sens.setPosition(800 - sens.getWidth(), 460); // text
         control.setPosition(800 - control.getWidth(), 310); // text
+        view.setPosition(800 - view.getWidth(), 610); // text
 
-        selectSens.setPosition(800, 500);
+        selectControl.setPosition(800, 600);
+        selectControl.setWidth(256);
+
+        selectSens.setPosition(800, 450);
         selectSens.setWidth(256);
 
         selectBox.setPosition(800, 300);
         selectBox.setWidth(256);
 
-        selectColor.setPosition(800, 100);
+        selectColor.setPosition(800, 150);
         selectColor.setWidth(256);
 
         backButton.setSize(256, 128); // button back
@@ -90,6 +100,8 @@ public class SettingsScreen implements Screen {
         stage.addActor(control);
         stage.addActor(backButton);
         stage.addActor(selectColor);
+        stage.addActor(selectControl);
+        stage.addActor(view);
     }
 
     private void setListeners(){
@@ -118,6 +130,13 @@ public class SettingsScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
+            }
+        });
+
+        selectControl.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                SensWidget.control = selectControl.getSelected();
             }
         });
     }

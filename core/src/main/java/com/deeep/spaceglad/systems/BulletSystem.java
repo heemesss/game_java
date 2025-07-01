@@ -44,13 +44,17 @@ public class BulletSystem extends EntitySystem implements EntityListener {
                 Entity entity1 = (Entity) colObj1.userData;
                 if (entity0.getComponent(CharacterComponent.class) != null && entity1.getComponent(CharacterComponent.class) != null) {
                     if (entity0.getComponent(EnemyComponent.class) != null && entity1.getComponent(PlayerComponent.class) != null) {
-                        if (entity0.getComponent(StatusComponent.class).alive)
+                        if (entity0.getComponent(StatusComponent.class).alive){
                             entity1.getComponent(PlayerComponent.class).health -= 10;
+                            gameWorld.gameUI.deathWidget.setDeath();
+                        }
                         entity0.getComponent(StatusComponent.class).alive = false;
                         gameWorld.remove(entity0);
                     } else if (entity1.getComponent(EnemyComponent.class) != null && entity0.getComponent(PlayerComponent.class) != null){
-                        if (entity1.getComponent(StatusComponent.class).alive)
+                        if (entity1.getComponent(StatusComponent.class).alive){
                             entity0.getComponent(PlayerComponent.class).health -= 10;
+                            gameWorld.gameUI.deathWidget.setDeath();
+                        }
                         entity1.getComponent(StatusComponent.class).alive = false;
                         gameWorld.remove(entity1);
                     }

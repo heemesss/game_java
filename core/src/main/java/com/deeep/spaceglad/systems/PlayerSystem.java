@@ -10,12 +10,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.bullet.collision.ClosestRayResultCallback;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.deeep.spaceglad.Assets;
@@ -33,6 +36,7 @@ import com.deeep.spaceglad.managers.SensWidget;
 import com.deeep.spaceglad.screens.GameScreen;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class PlayerSystem extends EntitySystem implements EntityListener, InputProcessor {
     private Entity player;
@@ -51,7 +55,7 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
 
     private float accY = Gdx.input.getAccelerometerY(), accZ = Gdx.input.getAccelerometerZ();
 
-    private TextButton fireButton;
+    private Image fireButton;
 
     public PlayerSystem(Camera camera, GameUI gameUI, World gameWorld) {
         this.camera = camera;
@@ -60,7 +64,7 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
         rayTestCB = new ClosestRayResultCallback(Vector3.Zero, Vector3.Z);
 
         if (Gdx.app.getType() == Application.ApplicationType.Android){
-            fireButton = new TextButton("fire", Assets.skin);
+            fireButton = new Image(new Texture("data/fire.png"));
             fireButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -92,14 +96,16 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
                     if (Gdx.input.getX(i) > Gdx.graphics.getWidth() / 2) {
                         camera.rotate(camera.up, -Gdx.input.getDeltaX(i) * 0.25f * SensWidget.sens);
                         getX += -Gdx.input.getDeltaX(i) * 0.25f * SensWidget.sens;
-                        camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY(i) * 0.25f * SensWidget.sens);
+                        if (Objects.equals(SensWidget.control, "base"))
+                            camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY(i) * 0.25f * SensWidget.sens);
                         break;
                     }
                 }
             }
             if (!SensWidget.mode) {
                 camera.rotate(camera.up, SensWidget.sens * (Gdx.input.getAccelerometerY() - accY));
-                camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -(Gdx.input.getAccelerometerZ() - accZ) * 0.25f * SensWidget.sens);
+                if (Objects.equals(SensWidget.control, "base"))
+                    camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -(Gdx.input.getAccelerometerZ() - accZ) * 0.25f * SensWidget.sens);
 
 //                accY = Gdx.input.getAccelerometerY();
 //                accZ = Gdx.input.getAccelerometerZ();
@@ -107,7 +113,8 @@ public class PlayerSystem extends EntitySystem implements EntityListener, InputP
         } else {
             camera.rotate(camera.up, -Gdx.input.getDeltaX() * 0.5f * SensWidget.sens);
             getX += -Gdx.input.getDeltaX() * 0.5f * SensWidget.sens;
-            camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f * SensWidget.sens);
+            if (Objects.equals(SensWidget.control, "base"))
+                camera.direction.rotate(new Vector3().set(camera.direction).crs(camera.up).nor(), -Gdx.input.getDeltaY() * 0.5f * SensWidget.sens);
         }
 
         // Zero

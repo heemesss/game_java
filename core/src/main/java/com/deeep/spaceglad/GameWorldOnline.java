@@ -43,8 +43,6 @@ public class GameWorldOnline extends World {
     private MyRequest request;
     private MyResponse response;
 
-    private GameUI gameUI;
-
     public GameWorldOnline(GameUI gameUI, MyServer server, MyClient client, MyRequest request,
                            MyResponse response){
         this.server = server;

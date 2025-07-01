@@ -6,6 +6,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -18,6 +19,7 @@ public class Assets {
     public static Skin skin;
     public static TextureRegionDrawable prog_bar_full, prog_bar;
     public static Sound soundGun, soundDeath;
+    public static ImageTextButton.ImageTextButtonStyle style;
 
     public Assets() {
         skin = new Skin();
@@ -35,6 +37,11 @@ public class Assets {
 
         soundGun = Gdx.audio.newSound(Gdx.files.internal("data/soundGun.mp3"));
         soundDeath = Gdx.audio.newSound(Gdx.files.internal("data/soundDeath.mp3"));
+
+         style = new ImageTextButton.ImageTextButtonStyle(
+            new TextureRegionDrawable(new Texture("data/button_up.png")),
+            new TextureRegionDrawable(new Texture("data/button_down.png")),
+            new TextureRegionDrawable(new Texture("data/button_up.png")), Assets.skin.getFont("default-font"));
     }
 
     public static void dispose() {

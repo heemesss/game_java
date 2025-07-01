@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -26,7 +27,7 @@ import java.util.Objects;
 public class OnlineMenuScreen implements Screen {
     private Core game;
     private Stage stage;
-    private TextButton hostButton, clientButton, startButton, backButton;
+    private ImageTextButton hostButton, clientButton, startButton, backButton;
     private Label label, labelMessage;
     private Image background;
 
@@ -58,10 +59,10 @@ public class OnlineMenuScreen implements Screen {
 
     private void setWidgets() {
         background = new Image(new Texture(Gdx.files.internal("data/backgroundMN.png")));
-        hostButton = new TextButton("Create", Assets.skin);
-        clientButton = new TextButton("Join", Assets.skin);
-        startButton = new TextButton("Start", Assets.skin);
-        backButton = new TextButton("Back", Assets.skin);
+        hostButton = new ImageTextButton("Create", Assets.style);
+        clientButton = new ImageTextButton("Join", Assets.style);
+        startButton = new ImageTextButton("Start", Assets.style);
+        backButton = new ImageTextButton("Back", Assets.style);
         label = new Label(ipAddressOfServer, Assets.skin);
         labelMessage = new Label("Create or Join", Assets.skin);
     }

@@ -3,11 +3,16 @@ package com.deeep.spaceglad.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.deeep.spaceglad.Assets;
 import com.deeep.spaceglad.Core;
@@ -16,13 +21,13 @@ public class MainMenuScreen implements Screen {
     Core game;
     Stage stage;
     Image backgroundImage, titleImage;
-    TextButton playButton, quitButton, leaderboardsButton, onlineGameButton, settingsButton;
+    ImageTextButton playButton, quitButton, leaderboardsButton, onlineGameButton, settingsButton;
 
     public MainMenuScreen(Core game) {
         this.game = game;
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         setWidgets();
-        configureWidgers();
+        configureWidgets();
         setListeners();
 
         Gdx.input.setInputProcessor(stage);
@@ -31,23 +36,23 @@ public class MainMenuScreen implements Screen {
     private void setWidgets() {
         backgroundImage = new Image(new Texture(Gdx.files.internal("data/backgroundMN.png")));
         titleImage = new Image(new Texture(Gdx.files.internal("data/title.png")));
-        playButton = new TextButton("Play", Assets.skin);
-        leaderboardsButton = new TextButton("Leaders", Assets.skin);
-        onlineGameButton = new TextButton("Online", Assets.skin);
-        quitButton = new TextButton("Quit", Assets.skin);
-        settingsButton = new TextButton("Setting", Assets.skin);
+        playButton = new ImageTextButton("Play", Assets.style);
+        leaderboardsButton = new ImageTextButton("Leaders", Assets.style);
+        onlineGameButton = new ImageTextButton("Online", Assets.style);
+        quitButton = new ImageTextButton("Quit", Assets.style);
+        settingsButton = new ImageTextButton("Setting", Assets.style);
     }
 
-    private void configureWidgers() {
+    private void configureWidgets() {
         backgroundImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         titleImage.setSize(Gdx.graphics.getWidth() / 3f, 200);
         titleImage.setPosition(Gdx.graphics.getWidth() / 6f * 2 - titleImage.getWidth() / 2, Gdx.graphics.getHeight() / 2f - titleImage.getHeight() / 2);
 
-        playButton.setSize(256, 128);
-        quitButton.setSize(256, 128);
-        leaderboardsButton.setSize(256, 128);
-        onlineGameButton.setSize(256, 128);
-        settingsButton.setSize(256, 128);
+        playButton.setSize(300, 128);
+        quitButton.setSize(300, 128);
+        leaderboardsButton.setSize(300, 128);
+        onlineGameButton.setSize(300, 128);
+        settingsButton.setSize(300, 128);
 
         playButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + playButton.getHeight() * 1.75f);
         onlineGameButton.setPosition(Gdx.graphics.getWidth() / 4f * 3 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2f + onlineGameButton.getHeight() * 0.25f);

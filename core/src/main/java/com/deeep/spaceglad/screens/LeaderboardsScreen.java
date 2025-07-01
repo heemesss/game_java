@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -18,12 +19,12 @@ public class LeaderboardsScreen implements Screen {
     Core game;
     Stage stage;
     Image backgroundImage;
-    TextButton backButton;
+    ImageTextButton backButton;
     Label label[];
 
     public LeaderboardsScreen(Core game) {
         this.game = game;
-        stage = new Stage(new FitViewport(Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT));
+        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         setWidgets();
         configureWidgers();
         setListeners();
@@ -32,15 +33,15 @@ public class LeaderboardsScreen implements Screen {
 
     private void setWidgets() {
         backgroundImage = new Image(new Texture(Gdx.files.internal("data/backgroundMN.png")));
-        backButton = new TextButton("Back", Assets.skin);
+        backButton = new ImageTextButton("Back", Assets.style);
         label = new Label[5];
         for (int i = 0; i < label.length; i++) label[i] = new Label(i + 1 + ". " + Settings.highscores[i], Assets.skin);
     }
 
     private void configureWidgers() {
-        backgroundImage.setSize(Core.VIRTUAL_WIDTH, Core.VIRTUAL_HEIGHT);
-        backButton.setSize(128, 64);
-        backButton.setPosition(Core.VIRTUAL_WIDTH - backButton.getWidth() - 5, 5);
+        backgroundImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        backButton.setSize(300, 128);
+        backButton.setPosition(Gdx.graphics.getWidth() - backButton.getWidth() - 5, 5);
 
         stage.addActor(backgroundImage);
         stage.addActor(backButton);
